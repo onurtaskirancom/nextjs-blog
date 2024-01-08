@@ -1,0 +1,56 @@
+---
+title: 404 errors in ASP.NET Core Mvc
+description: When a web page is not found, a 404 error is returned by the application and ASP.NET Core MVC provides a generic error page 404 errors normally look bad.
+date: "2022-09-02T04:42:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671069309/uk435ku3c9dzqrdok9o5.jpg" alt="onurtaskiran" />
+
+When a web page is not found, a 404 error is returned by the application and ASP.NET Core MVC provides a generic error page 404 errors normally look bad. We can redirect the error to the 404 page we created. Let's go to the startup.cs page of our project. Remove the code below
+
+```javascript
+app.UseExceptionHandler("/Home/Error");
+```
+
+```javascript
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+```
+
+Go to launchSettingJson 
+
+LaunchSettings Json should look like this.
+
+```javascript
+"profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+```
+
+Add ErrorController.cs to our Controllers file   
+
+```javascript
+using Microsoft.AspNetCore.Mvc;
+
+namespace ProjectWeb.Controllers
+{
+    public class ErrorController : Controller
+    {
+        [Route("Error/{status}")]
+        public IActionResult HttpStatusCodeHandler(int status)
+        {
+            switch (status)
+            {
+                case 404: ViewBag.errorMessage = "Page Not Found";
+                    break;
+            }
+            return View("NotFound");
+        }
+    }
+}
+```
+
+Add NotFound.cshtml and design as you want

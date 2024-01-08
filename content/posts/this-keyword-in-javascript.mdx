@@ -1,0 +1,162 @@
+---
+title: This Keyword in JavaScript
+description: This keyword is the scariest part of JavaScript. Yes, this is one of the most confusing topics so why is this confusing? because its value can sometimes seem unpredictable.
+date: "2023-04-02T13:37:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1680431810/mdp31cawouu3jygdd2aw.jpg" alt="onurtaskiran" />
+
+This keyword is the scariest part of JavaScript. Yes, this is one of the most confusing topics so why is this confusing? because its value can sometimes seem unpredictable. There are rules that determine the value of this structure, and once we learn these rules, the concept of this will not confuse us. So in order to approach with a logic, we must first know the rules. First of all, in JavaScript the this keyword refers to an object and it refers to the object that is currently calling the function. When we type this it will give you back an object. So depending on the scope and the rules for how it works, this object changes. which is confusing.
+
+So let's look at our first example. When we enter the console, we will get an object from here.
+
+```javascript
+function messageHello() {
+  console.log('HI');
+  console.log(this);
+}
+
+messageHello();
+```
+
+output:
+```javascript
+// HI
+// Window {}
+```
+
+We see object named hello and window. Window is the global scope in our browser. We cannot assume that every time you write this to a function, it will refer to the window. in the above function this refers to the window.
+
+Implicit Binding
+
+This is the most widely used. Let's examine this example.
+
+```javascript
+const person = {
+  name: 'onur',
+  age: 20,
+  sayName() {
+    console.log(this);
+    console.log(this.name);
+  },
+  sayAge() {
+    console.log(this);
+    console.log(this.age);
+  },
+};
+
+person.sayName();
+person.sayAge();
+```
+
+output:
+```javascript
+{name: "onur", age: 20, sayName: ƒ}
+onur
+{name: "onur", age: 20, sayName: ƒ}
+20
+```
+
+in the first example we got the Window object, the global execution context and the global scope. in the second example this refers to the person object.
+
+It allows us to reference properties or other methods. So we can have a method that is aware of other contents in its object.
+
+In our second example, this refers to whatever is to the left of the dot. And that's all you really need to know about it. Whatever is to the left of the point is the object of which the function is a property. we call it Implicit binding. why this is called Implicit binding? because it is not clear how this will behave at the moment.
+
+Exclicit Bindings
+
+Here we specify what this will display without calling the function. that is, we determine exactly what the this keyword should represent. We have 3 functions to do this. These are call(), apply(), bind()
+
+```javascript
+const fighter1 = {
+  name: 'jon',
+  age: 36,
+  class: 'Heavyweight',
+};
+
+const fighter2 = {
+  name: 'Alex',
+  age: 35,
+  class: 'Middleweight',
+};
+
+const fighterInfo = function (...skill) {
+    console.log(this);
+    console.log(
+      `Fighter name: ${this.name} Fighter Age: ${this.age} Class: ${this.class}`
+    ); 
+    console.log(`Fighting skills ${skill}`);
+}
+
+fighterInfo.call(fighter1, 'Jiu-Jitsu', 'Muaythai');
+fighterInfo.apply(fighter1, ['Box', 'Jiu-Jitsu']);
+
+const champ = fighterInfo.bind(fighter2, ['Jiu-Jitsu', 'Box', 'Muaythai']);
+champ();
+```
+output:
+```javascript
+{name: 'jon', age: 36, class: 'Heavyweight'}
+Fighter name: jon Fighter Age: 36 Class: Heavyweight
+Fighting skills Jiu-Jitsu,Muaythai
+{name: 'jon', age: 36, class: 'Heavyweight'}
+Fighter name: jon Fighter Age: 36 Class: Heavyweight
+Fighting skills Box,Jiu-Jitsu
+{name: 'Alex', age: 35, class: 'Middleweight'}
+Fighter name: Alex Fighter Age: 35 Class: Middleweight
+Fighting skills Jiu-Jitsu,Box,Muaythai
+```
+New Binding
+```javascript
+function Person(name, age) {
+  this.name = 'my name is ' + name;
+  this.age =age;
+  console.log(this.name);
+  console.log(name);
+}
+
+const person1 = new Person('Conor', 32)
+```
+output:
+```javascript
+my name is Conor
+Conor
+```
+
+it allows us to assign the person to the object we are instantiating. first person here will be the keyword this.
+
+this.age = age; then a brand new object is created. in that,
+
+```javascript
+const testing = {
+	name: 'name',
+	age: 'age',
+}
+```
+
+Arrow Function
+
+We can do lexical scoping with arrow functions.
+
+example:
+```javascript
+const sayHi = {
+  name: 'Angelina',
+  age: 40,
+  hi: function () {
+    var inside = () => {
+      console.log('Hi ' + this.name);
+    };
+    return inside();
+  },
+};
+
+sayHi.hi();
+```
+
+```javascript
+output: Hi Angelina
+```
+We see that this in arrow functions is lexically inherited. If we didn't use an arrow function, that is, a normal function, it would usually be the window object we never wanted. Since arrow functions do not have this, the use of methods such as call, apply, bind does not give the desired result. In such cases, we should use the classical function.
+
+That is all. happy coding.

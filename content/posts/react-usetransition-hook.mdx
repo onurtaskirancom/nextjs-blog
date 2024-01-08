@@ -1,0 +1,88 @@
+---
+title: React useTransition Hook
+description: React is fast by default. So the useTransition hook has specific use cases and is probably not something you will use in all your applications.
+date: "2023-11-14T15:55:00"
+---
+
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1699966515/p32fzcdne2cydf2lunwu.jpg" alt="onurtaskiran" />
+
+React is fast by default. So the useTransition hook has specific use cases and is probably not something you will use in all your applications. useTransition hook is a hook available in React 18 and above and is used to manage asynchronous operations. This hook is designed to provide better performance and faster user experience, especially in large and complex applications. Thus, the user interface does not freeze and user interaction is not hindered.
+
+In the example below, when you click the button, 50 000 items are added to the "items" array and these items are displayed as "div" elements containing the "☠️" symbol. 
+
+```javascript
+import React, { useState } from 'react';
+
+function App() {
+  const [items, setItems] = useState([]); 
+const addItem = () => {
+      const newItems = Array.from({ length: 50000 }, (_, index) => {
+        return (
+          <div key={index}>
+            <p>☠️</p>
+          </div>
+        );
+      });
+      setItems(newItems);
+    };
+
+  return (
+
+    <div>
+      <button onClick={addItem}>Add Item</button>
+      {items}
+    </div>
+  );
+}
+
+export default App;
+```
+
+It will run very slowly. It will take a long time for them to appear on the screen.
+
+Now let's do our example with the useTransition hook
+
+```javascript
+import React, { useState, useTransition } from 'react';
+
+function App() {
+  const [items, setItems] = useState([]);
+  const [isAdding, startAdding] = useTransition();
+  
+  const addItem = () => {
+    startAdding(() => {
+      const newItems = Array.from({ length: 50000 }, (_, index) => {
+        return (
+          <div key={index}>
+            <p>☠️</p>
+          </div>
+        );
+      });
+
+      setItems(newItems);
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={addItem}>Add Item</button>
+      {isAdding ? (
+        <p>Adding items...</p>
+      ) : (
+        items
+      )}
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this example, we saw how React can handle large batch updates without blocking the main thread. Migration helps React prioritize rebuild updates, making it more responsive to user interactions.
+
+The purpose of this code is to showcase how concurrent mode can be used to handle large batch updates to the UI without blocking the main thread, making the application more responsive to user interactions. The transition helps avoid UI jank by allowing React to prioritize rendering updates.
+
+we use the useTransition hook to manage the addition of items to the "items" array. When you initiate the addition, a transition sequence is used to add items to the array. The variable "isAdding" is used to control whether the transition is ongoing. If the addition is in progress, you'll see the "Adding items..." message; otherwise, the added items are rendered.
+
+This provides a better user experience for situations that involve larger operations and UI updates.

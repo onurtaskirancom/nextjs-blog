@@ -1,0 +1,298 @@
+---
+title: React useReducer Hook
+description: useReducer is a state management method in React, just like useState. It provides a structure and set of rules that lead to fewer errors and easier code management. 
+date: "2023-09-07T23:23:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1696710217/r7jw0mhghevee4m1ztir.jpg" alt="onurtaskiran" />
+
+useReducer is a state management method in React, just like useState. It provides a structure and set of rules that lead to fewer errors and easier code management. We use it to handle more complex state logic and to perform state changes in a more structured way compared to useState. As your application grows in size, managing everything solely with useState can become quite challenging. In projects with multiple developers, you might encounter the use of useReducer.
+
+The useReducer Hook takes two parameters: the reducer function and initial state values. The useReducer Hook returns an array of two elements: the first one is our state, and the second one is a dispatch function.
+
+When making changes to the state, we send an action object into the dispatch function we execute.
+
+If you haven't used the <a href="/posts/javascript-array-reduce">JavaScript Array Reduce</a> method before, you can look into <a href="/posts/javascript-array-reduce">this article</a>  or do a quick search on Google.
+
+If we want to update something, if we want to change this state value, we go with dispatch. We send an action object into Dispatch, and the action object necessarily takes a parameter called type, and we enter the change we want to make in the state into the type. Here we must provide the type property. We can also enter the data we want to save in the state in the payload section. Type is mandatory and payload is optional.
+
+Getting used to the terminology might take a bit of time, so there's no need to stress ourselves. We just need to stay relaxed.
+
+Let's examine a simple example of incrementing and decrementing a counter.
+
+```javascript
+import React, { useState } from 'react';
+
+const Counter = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      Count: {count}
+      <button onClick={() => setCount(prevCount => prevCount + 1)}>Increment</button>
+      <button onClick={() => setCount(prevCount => prevCount - 1)}>Decrement</button>
+    </div>
+  );
+};
+
+export default Counter;
+```
+Let's now implement the example using useReducer.
+
+The useReducer function returns a state and a dispatch function used to update the state using a state management pattern called the "Reducer" function. The Reducer function is a function that updates the state based on specific actions and facilitates these updates.
+
+For example, the usage of useReducer in a counter application is as follows:
+
+Here's an example using useReducer:
+
+```javascript
+import React, { useReducer } from 'react';
+
+const initialState = { count: 0 };
+
+const reducer = (state, action) => {
+  if (action.type === 'increment') {
+    return { count: state.count + 1 };
+  } else if (action.type === 'decrement') {
+    return { count: state.count - 1 };
+  } else {
+    throw new Error();
+  }
+};
+
+const Counter = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      Count: {state.count}
+      <button onClick={() => dispatch({ type: 'increment' })}>Increment</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
+    </div>
+  );
+};
+
+export default Counter;
+```
+Shopping cart example
+
+```javascript
+import React, { useReducer } from 'react';
+
+const initialState = {
+  products: [],
+  total: 0,
+};
+
+const reducer = (state, action) => {
+  if (action.type === 'addProduct') {
+    return {
+      ...state,
+      products: [...state.products, action.payload],
+      total: state.total + action.payload.price,
+    };
+  }
+  if (action.type === 'removeProduct') {
+    const updatedProducts = state.products.filter(
+      (product) => product.id !== action.payload.id
+    );
+    const updatedTotal = updatedProducts.reduce(
+      (acc, product) => acc + product.price,
+      0
+    );
+    return {
+      ...state,
+      products: updatedProducts,
+      total: updatedTotal,
+    };
+  }
+  if (action.type === 'resetCart') {
+    return initialState;
+  }
+  throw new Error('Invalid action type.');
+};
+
+const ShoppingCart = () => {
+  const [cart, dispatch] = useReducer(reducer, initialState);
+
+  const products = [
+    { id: 1, name: 'Product 1', price: 10 },
+    { id: 2, name: 'Product 2', price: 20 },
+    { id: 3, name: 'Product 3', price: 15 },
+  ];
+
+  const handleAddProduct = (product) => {
+    dispatch({ type: 'addProduct', payload: product });
+  };
+
+  const handleRemoveProduct = (product) => {
+    dispatch({ type: 'removeProduct', payload: product });
+  };
+
+  const handleResetCart = () => {
+    dispatch({ type: 'resetCart' });
+  };
+
+  return (
+    <div>
+      <h2>Shopping Cart</h2>
+      <ul>
+        {products.map((product) => (
+          <li key={product.id}>
+            {product.name} - ${product.price}
+            <button onClick={() => handleAddProduct(product)}>
+              Add to Cart
+            </button>
+          </li>
+        ))}
+      </ul>
+      <h3>Cart</h3>
+      <ul>
+        {cart.products.map((product) => (
+          <li key={product.id}>
+            {product.name} - ${product.price}
+            <button onClick={() => handleRemoveProduct(product)}>
+              Remove from Cart
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p>Total: ${cart.total}</p>
+      <button onClick={handleResetCart}>Reset Cart</button>
+    </div>
+  );
+};
+
+export default ShoppingCart;
+```
+
+Let's examine the example in detail.
+```javascript
+import React, { useReducer } from 'react';
+```
+
+So in order to get started with useReducer, first we need to grab the hook
+
+InitialState 
+
+```javascript
+const initialState = {
+  products: [],
+  total: 0,
+};
+```
+
+initialState defines the initial state of the shopping cart, which includes an empty list of products and a total of 0.
+
+Reducer
+
+```javascript
+const reducer = (state, action) => {
+  if (action.type === 'addProduct') {
+    return {
+      ...state,
+      products: [...state.products, action.payload],
+      total: state.total + action.payload.price,
+    };
+  }
+  if (action.type === 'removeProduct') {
+    const updatedProducts = state.products.filter(
+      (product) => product.id !== action.payload.id
+    );
+    const updatedTotal = updatedProducts.reduce(
+      (acc, product) => acc + product.price,
+      0
+    );
+    return {
+      ...state,
+      products: updatedProducts,
+      total: updatedTotal,
+    };
+  }
+  if (action.type === 'resetCart') {
+    return initialState;
+  }
+  throw new Error('Invalid action type.');
+};
+```
+Reducer is a function that specifies how the state should be updated based on different actions. The actions supported are 'addProduct', 'removeProduct', and 'resetCart'.
+
+ShoppingCart Component:
+
+```javascript
+const ShoppingCart = () => {
+  const [cart, dispatch] = useReducer(reducer, initialState);
+
+  const products = [
+    { id: 1, name: 'Product 1', price: 10 },
+    { id: 2, name: 'Product 2', price: 20 },
+    { id: 3, name: 'Product 3', price: 15 },
+  ];
+
+  const handleAddProduct = (product) => {
+    dispatch({ type: 'addProduct', payload: product });
+  };
+
+  const handleRemoveProduct = (product) => {
+    dispatch({ type: 'removeProduct', payload: product });
+  };
+
+  const handleResetCart = () => {
+    dispatch({ type: 'resetCart' });
+  };
+
+  return (
+    <div>
+      <h2>Shopping Cart</h2>
+      <ul>
+        {products.map((product) => (
+          <li key={product.id}>
+            {product.name} - ${product.price}
+            <button onClick={() => handleAddProduct(product)}>
+              Add to Cart
+            </button>
+          </li>
+        ))}
+      </ul>
+      <h3>Cart</h3>
+      <ul>
+        {cart.products.map((product) => (
+          <li key={product.id}>
+            {product.name} - ${product.price}
+            <button onClick={() => handleRemoveProduct(product)}>
+              Remove from Cart
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p>Total: ${cart.total}</p>
+      <button onClick={handleResetCart}>Reset Cart</button>
+    </div>
+  );
+};
+
+export default ShoppingCart;
+```
+ShoppingCart Component:
+
+The ShoppingCart component renders a list of products with "Add to Cart" buttons.
+It also displays the current contents of the cart (items added) and allows for removal of items.
+The total price of the items in the cart is displayed.
+There's a "Reset Cart" button to reset the cart to its initial state.
+
+
+Actions:
+
+addProduct: Adds a product to the cart along with its price and updates the total.
+removeProduct: Removes a product from the cart based on its id and updates the total.
+resetCart: Resets the cart to its initial state.
+
+
+Event Handlers:
+
+handleAddProduct: Dispatches an action to add a product to the cart.
+handleRemoveProduct: Dispatches an action to remove a product from the cart.
+handleResetCart: Dispatches an action to reset the cart.
+
+
+The useReducer hook is used to manage the cart state and update it based on the actions dispatched. The ShoppingCart component renders the product list and cart, allowing users to add, remove, and reset the cart.

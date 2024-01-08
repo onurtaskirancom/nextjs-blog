@@ -1,0 +1,32 @@
+---
+title: Docker is unable to find image locally
+description: If you are trying to run Docker for Windows within a virtual machine, you need to enable 'Nested Virtualization'. 
+date: "2022-05-16T05:15:00"
+---
+
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671156932/lnvtgqmtsb4ewo8wyque.jpg" alt="onurtaskiran" />
+
+If you are trying to run Docker for Windows within a virtual machine, you need to enable 'Nested Virtualization'. You need to upgrade your windows to the latest version and you also need to enable virtualization in BIOS. I used docker for the first time a few days ago and got an error. Even though I did virtualization, I kept getting errors.
+
+> Unable to find image 'xxxx' locally
+
+First of all, I installed the docker on my computer and then I marked the containers and Hyper-V features. so i got an error then I deleted docker completely and did the virtualization. so the error was fixed.
+
+So what will we do, here is the simple solution
+
+Open "Turn windows features on or off" from Control Panel
+
+Remove the selections from containers and Hyper-V
+
+<img className="w-6/12" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704638779/kb7agtgllxhxageun4jm.jpg" alt="onurtaskiran" />
+
+Restart the computer
+
+Mark the containers and Hyper-V features as selected
+
+<img className="w-6/12" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704638779/npvepyaqlv4bmhqq0g1i.jpg" alt="onurtaskiran" />
+
+Restart your computer again
+
+Install and run docker.

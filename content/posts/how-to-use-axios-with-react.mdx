@@ -1,0 +1,221 @@
+---
+title: How to use Axios with React
+description: Axios is not a part of React; it can be used with any frontend framework. Axios is not your only option, but it is certainly one of the most popular. 
+date: "2023-11-18T08:00:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1700331940/fwpe1ml9qp0dkt123vjn.jpg" alt="onurtaskiran" />
+
+Axios is not a part of React; it can be used with any frontend framework. Axios is not your only option, but it is certainly one of the most popular. You can customize it according to your project's needs by using each of Axios's fundamental HTTP methods. Axios is a popular JavaScript library used for making HTTP requests from a browser or Node.js. It supports promises and can be used with async/await syntax. It is often used with React applications to fetch data from APIs. To use Axios in a React project, you first need to install it. You can do this using npm or yarn. Open your terminal and run:
+
+```javascript
+npm install axios
+```
+or
+```javascript
+yarn add axios
+```
+Once Axios is installed, you can use it in your React components.
+
+### CREATE (POST) example
+
+```javascript
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const CreateWithCustomAxios = () => {
+  const [newData, setNewData] = useState({
+    title: 'New Title',
+    body: 'New Body',
+  });
+  const [createdData, setCreatedData] = useState(null);
+  const [error, setError] = useState(null);
+
+  const customAxios = axios.create({
+    baseURL: 'https://jsonplaceholder.typicode.com',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const handleCreateRequest = async () => {
+    try {
+      const response = await customAxios.post('/posts', newData);
+      setCreatedData(response.data);
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>Create with Custom Axios Example</h2>
+      <label>Title: </label>
+      <input
+        type="text"
+        value={newData.title}
+        onChange={(e) => setNewData({ ...newData, title: e.target.value })}
+      />
+      <br />
+      <label>Body: </label>
+      <textarea
+        value={newData.body}
+        onChange={(e) => setNewData({ ...newData, body: e.target.value })}
+      />
+      <br />
+      <button onClick={handleCreateRequest}>Create Data</button>
+
+      {createdData && (
+        <div>
+          <h3>Created Data</h3>
+          <p>Title: {createdData.title}</p>
+          <p>Body: {createdData.body}</p>
+        </div>
+      )}
+
+      {error && <p>Error: {error.message}</p>}
+    </div>
+  );
+};
+
+export default CreateWithCustomAxios;
+```
+
+In this example, a custom Axios instance is created using axios.create, and a POST request is made using this custom instance. Upon receiving a successful response in the try block, the created data is retrieved from response.data and the state is updated using setCreatedData. If an error occurs, the catch block is executed, and the error state is updated. Both the created data and the error state are displayed to the user.
+
+This example illustrates a typical scenario of using a custom Axios instance while performing a CREATE (POST) operation.
+
+### POST Request Example:
+```javascript
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const PostExample = () => {
+  const [postData, setPostData] = useState({
+    title: 'New Title',
+    body: 'New Body',
+  });
+
+  const handlePostRequest = async () => {
+    try {
+      const response = await axios.post('https://jsonplaceholder.typicode.com/posts', postData);
+      console.log('Post response:', response.data);
+    } catch (error) {
+      console.error('Error making POST request:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>POST Request Example</h2>
+      <label>Title: </label>
+      <input
+        type="text"
+        value={postData.title}
+        onChange={e => setPostData({ ...postData, title: e.target.value })}
+      />
+      <br />
+      <label>Body: </label>
+      <textarea
+        value={postData.body}
+        onChange={e => setPostData({ ...postData, body: e.target.value })}
+      />
+      <br />
+      <button onClick={handlePostRequest}>Make POST Request</button>
+    </div>
+  );
+};
+
+export default PostExample;
+```
+
+POST Request Example: It makes a POST request with the data entered in the user form (postData). In the try block, a POST request is made using Axios's post method. If successful, the received data is retrieved from response.data and printed to the console. In case of an error, the catch block is executed, and the error is printed to the console.
+
+### PUT Request Example
+```javascript
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const PutExample = () => {
+  const [putData, setPutData] = useState({
+    id: 1, // Specify the ID of the record to be updated
+    title: 'Updated Title',
+    body: 'Updated Body',
+  });
+
+  const handlePutRequest = async () => {
+    try {
+      const apiUrl = `https://jsonplaceholder.typicode.com/posts/${putData.id}`;
+      const response = await axios.put(apiUrl, putData);
+      console.log('Put response:', response.data);
+    } catch (error) {
+      console.error('Error making PUT request:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>PUT Request Example</h2>
+      <label>Title: </label>
+      <input
+        type="text"
+        value={putData.title}
+        onChange={e => setPutData({ ...putData, title: e.target.value })}
+      />
+      <br />
+      <label>Body: </label>
+      <textarea
+        value={putData.body}
+        onChange={e => setPutData({ ...putData, body: e.target.value })}
+      />
+      <br />
+      <button onClick={handlePutRequest}>Make PUT Request</button>
+    </div>
+  );
+};
+
+export default PutExample;
+```
+
+PUT Request Example: It makes a PUT request with the data updated by the user (putData). In the try block, a PUT request is made using Axios's put method. If successful, the received data is retrieved from response.data and printed to the console. In case of an error, the catch block is executed, and the error is printed to the console.
+
+### DELETE Request Example:
+
+```javascript
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const DeleteExample = () => {
+  const [postId, setPostId] = useState(1);
+
+  const handleDeleteRequest = async () => {
+    try {
+      const apiUrl = `https://jsonplaceholder.typicode.com/posts/${postId}`;
+      const response = await axios.delete(apiUrl);
+      console.log('Delete response:', response.data);
+    } catch (error) {
+      console.error('Error making DELETE request:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h2>DELETE Request Example</h2>
+      <label>Post ID: </label>
+      <input
+        type="number"
+        value={postId}
+        onChange={e => setPostId(e.target.value)}
+      />
+      <br />
+      <button onClick={handleDeleteRequest}>Make DELETE Request</button>
+    </div>
+  );
+};
+
+export default DeleteExample;
+```
+
+DELETE Request Example: It makes a DELETE request with the ID entered by the user. In the try block, a DELETE request is made using Axios's delete method. If successful, the received data is retrieved from response.data and printed to the console. In case of an error, the catch block is executed, and the error is printed to the console.
+
+These examples involve performing different HTTP requests using the Axios library. The try and catch blocks help to check if the request is successful and provide an appropriate response in case of an error. This is a typical JavaScript/React pattern for handling asynchronous operations and dealing with errors.

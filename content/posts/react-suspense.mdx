@@ -1,0 +1,89 @@
+---
+title: React Suspense
+description: React Suspense is a powerful tool that can be used to enhance React applications for better performance and better user experience. 
+date: "2023-11-15T03:25:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1700088627/lhsowghpnrtlddhsex4k.jpg" alt="onurtaskiran" />
+
+React Suspense is a powerful tool that can be used to enhance React applications for better performance and better user experience. To lazily load our components or incrementally load our application, we use a tool called suspense. React Suspense is a feature that allows React applications to better handle asynchronous operations. It is often used for data loading, code loading and other asynchronous operations. React Suspense is ideal for improving user experience and improving application performance.
+
+React.lazy() is a function used to manage dynamically loaded components. This feature alleviates the initial loading of the application and ensures that it is loaded only when the component is needed. It is often used in conjunction with the "code splitting" strategy.
+
+A simple example:
+
+```javascript
+import React, { Suspense, lazy } from 'react';
+
+const SlowComponent = lazy(() => import('./SlowComponent'));
+
+function App() {
+  return (
+    <div>
+      <h1>React Suspense Example</h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SlowComponent />
+      </Suspense>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In the example above, the Suspense component shows "Loading..." while waiting for the SlowComponent loaded with React.lazy().
+
+Let's look at another example.
+
+Let's consider a social media application where we will use React Suspense to asynchronously load a user's profile and posts.
+
+
+```javascript
+import React, { Suspense } from "react";
+
+// Function to asynchronously load user profile data
+const fetchUserProfile = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ name: "John Doe", username: "johndoe" });
+    }, 2000);
+  });
+};
+
+// Function to asynchronously load user posts
+const fetchUserPosts = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        { id: 1, text: "Hello, this is my first post!" },
+        { id: 2, text: "Writing code with React Suspense is awesome!" },
+      ]);
+    }, 3000);
+  });
+};
+
+const Profile = React.lazy(() => import("./Profile"));
+const Posts = React.lazy(() => import("./Posts"));
+
+function App() {
+  return (
+    <div>
+      <h1>Social Media App</h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <section>
+          <h2>Profile</h2>
+          <Profile />
+        </section>
+        <section>
+          <h2>Posts</h2>
+          <Posts />
+        </section>
+      </Suspense>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this example, the Profile and Posts components are dynamically loaded, and user profile and posts are asynchronously loaded. The Suspense component displays a "Loading..." indicator while the data is loading. This example demonstrates fetching data from different sources and using React Suspense to enhance the user experience.

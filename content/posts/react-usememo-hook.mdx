@@ -1,0 +1,146 @@
+---
+title: React useMemo Hook
+description: React's useMemo hook is a hook used to optimize computationally expensive operations. The way useMemo works is very similar to use callback.
+date: "2023-09-29T00:16:00"
+---
+
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1698527726/dfwv9qujhd5jy6kzrhr9.jpg" alt="onurtaskiran" />
+
+React's useMemo hook is a hook used to optimize computationally expensive operations. The way useMemo works is very similar to use callback. The difference between useCallback and use memo is that it stores the value we get back from the function. So UseCallback is used to memorize a function, UseMemo is used to memorize a value.
+ 
+useMemo is often used to cache the results of computationally expensive operations and update them only when necessary. This can improve performance, especially when working with large lists of data or complex operations. However, excessive use can also negatively affect performance, so we should use it with caution.
+ 
+The useMemo function takes two main parameters: The first parameter is a function that contains a value or action to be calculated. This function calculates and returns the result. The second parameter is the dependency array. This array specifies which variables or props have changed. If the dependency string changes, useMemo performs a new calculation. If the dependency string is not changed, the previous result is used from the cache.
+ 
+Example:
+```javascript
+import React, { useState } from 'react';
+
+const ExampleComponent = ({ data }) => {
+  const calculateTotal = (data) => {
+    console.log("Calculating total...");
+    return data.reduce((acc, item) => acc + item, 0);
+  };
+
+  const total = calculateTotal(data);
+
+  return (
+    <div>
+      <h2>Data List:</h2>
+      <ul>
+        {data.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+      <div>Total: {total}</div>
+    </div>
+  );
+};
+
+const App = () => {
+  const [data, setData] = useState([1, 2, 3, 4, 5]);
+
+  return (
+    <div>
+      <h1>Without useMemo for Total</h1>
+      <button onClick={() => setData([...data, Math.floor(Math.random() * 10)])}>
+        Add Random Number
+      </button>
+      <ExampleComponent data={data} />
+    </div>
+  );
+};
+
+export default App;
+```
+
+In this example, the ExampleComponent component calculates the sum of the data at each render time without using useMemo. That is, the total is recalculated each time the data array is updated. Since useMemo is not used, unnecessary recalculations may occur. Using useMemo improves performance to prevent such situations.
+
+Now let's do the example with useMemo
+
+```javascript
+import React, { useState, useMemo } from 'react';
+
+const ExampleComponent = ({ data }) => {
+  const calculateTotal = (data) => {
+    console.log("Calculating total...");
+    return data.reduce((acc, item) => acc + item, 0);
+  };
+
+  const total = useMemo(() => calculateTotal(data), [data]);
+
+  return (
+    <div>
+      <h2>Data List:</h2>
+      <ul>
+        {data.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+      <div>Total: {total}</div>
+    </div>
+  );
+};
+
+const App = () => {
+  const [data, setData] = useState([1, 2, 3, 4, 5]);
+
+  return (
+    <div>
+      <h1>Using useMemo for Total</h1>
+      <button onClick={() => setData([...data, Math.floor(Math.random() * 10)])}>
+        Add Random Number
+      </button>
+      <ExampleComponent data={data} />
+    </div>
+  );
+};
+
+export default App;
+```
+
+In this example, the ExampleComponent component takes an array of data and calculates the sum of that data. Using useMemo recalculates the sum only when the data array changes. This improves performance and recalculation of the sum when the data array is updated.
+
+Now let's do an example that calculates the square of a number entered into an input box by the user.
+
+```javascript
+import React, { useState, useMemo } from 'react';
+
+function SquareCalculator() {
+  const [inputValue, setInputValue] = useState(0);
+
+  // Using useMemo to memoize the square calculation
+  const square = useMemo(() => {
+    console.log('Square calculated!');
+    return inputValue * inputValue;
+  }, [inputValue]); // inputValue is specified as a dependency
+
+  return (
+    <div>
+      <input
+        type="number"
+        value={inputValue}
+        onChange={(e) => setInputValue(Number(e.target.value))}
+      />
+      <p>Input Value: {inputValue}</p>
+      <p>Square Result: {square}</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <h1>Square Calculator</h1>
+      <SquareCalculator />
+    </div>
+  );
+}
+
+export default App;
+```
+
+In the example above, the SquareCalculator component allows the user to input a number. The square of the entered number is calculated using useMemo, and this calculation only occurs when the inputValue changes. The dependency array includes inputValue, so the calculation of the square only happens when the user input changes, and "Square calculated!" is printed to the console.
+
+This allows for calculation only when necessary, instead of performing a new square calculation at each step, improving performance for the user.

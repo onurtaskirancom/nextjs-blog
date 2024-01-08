@@ -1,0 +1,170 @@
+---
+title: Dark Theme in React
+description: Dark mode is a display mode in which the user interface of a website or application is usually designed with dark colors instead of light colors.
+date: "2023-12-06T06:21:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701832887/egvasnyoc2xpho9rpefs.jpg" alt="onurtaskiran" />
+
+Dark mode is a display mode in which the user interface of a website or application is usually designed with dark colors instead of light colors. This mode is generally preferred in low light conditions or when users want to experience less eye strain. Users can usually choose their preferred mode. Some websites and apps offer a "dark mode" option that allows users to save this preference and automatically use the same mode on subsequent visits. Enabling or disabling this mode can usually be done via a button or the settings menu.
+
+Dark mode can improve user experience and protect users' eyes, especially during night use or low light conditions. Additionally, using dark colors may offer a more stylish or modern look for some users. For this reason, many websites and applications try to appeal to a wide range of users by offering users the dark mode option.
+
+Let's install the react-icons npm package for moon and sun icons.
+
+```javascript
+npm install react-icons
+```
+App.js
+```javascript
+import React from 'react';
+import { useTheme } from './ThemeContext';
+import { BsFillSunFill, BsFillMoonFill } from 'react-icons/bs';
+import './App.css';
+
+const App = () => {
+  const theme = useTheme();
+
+  return (
+    <div className="App">
+      <header>
+        <h1>React Dark Theme</h1>
+        <button className="dark-toggle" onClick={theme.toggleDarkMode}>
+          {theme.isDarkMode ? (
+            <BsFillMoonFill className="toggle-icon-moon" />
+          ) : (
+            <BsFillSunFill className="toggle-icon-sun" />
+          )}
+        </button>
+      </header>
+    </div>
+  );
+};
+
+export default App;
+ ```
+
+ThemeContext.js:
+
+Create a context named ThemeContext.
+The useTheme hook utilizes ThemeContext to retrieve information about the theme.
+The ThemeProvider component uses useEffect to add or remove the dark-mode class based on the isDarkMode state. The toggleDarkMode function changes the theme and persists the change in localStorage.
+
+```javascript
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
+const ThemeContext = createContext();
+
+export const useTheme = () => {
+  return useContext(ThemeContext);
+};
+
+export const ThemeProvider = ({ children }) => {
+  const storedTheme = localStorage.getItem('isDarkMode');
+  const [isDarkMode, setDarkMode] = useState(
+    storedTheme ? JSON.parse(storedTheme) : false
+  );
+
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem('isDarkMode', JSON.stringify(newMode));
+      return newMode;
+    });
+  };
+
+  useEffect(() => {
+    document.body.classList.toggle('dark-mode', isDarkMode);
+  }, [isDarkMode]);
+
+  const theme = {
+    isDarkMode,
+    toggleDarkMode,
+  };
+
+  return (
+    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+  );
+};
+```
+Header.js
+
+Use the useTheme hook to obtain the theme variable.
+Add a title and a button. When the button is clicked, call the toggleDarkMode function to change the theme.
+```javascript
+import React from 'react';
+import { useTheme } from './ThemeContext';
+
+function Header() {
+  const theme = useTheme();
+
+  return (
+    <header
+      style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}
+    >
+      <h1>Uygulama Başlığı</h1>
+      <button onClick={theme.toggleDarkMode}>
+        {theme.isDarkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
+    </header>
+  );
+}
+
+export default Header;
+```
+
+index.js
+
+Use the ThemeProvider at the top level of your application to share your theme globally.
+Use the ReactDOM.render function to attach your App component, wrapped in the ThemeProvider, to an HTML element named root.
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import { ThemeProvider } from './ThemeContext';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>
+);
+```
+
+App.css 
+
+Contains style definitions related to the theme.Contains style definitions related to the theme.
+```javascript
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+.toggle-icon-moon {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.toggle-icon-sun {
+  font-size: 1.5rem;
+  color: #000;
+}
+
+.dark-toggle {
+  background: transparent;
+  border-color: transparent;
+}
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701832802/yp9rjtqefd5apmmc68ze.jpg" alt="onurtaskiran" />
+
+Our code includes a theme management that essentially creates a "dark mode" application. This example is a very instructive example to understand the concept of theme management.
+
+Happy coding.

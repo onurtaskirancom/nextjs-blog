@@ -1,0 +1,457 @@
+---
+title: React Query
+description: React Query is an easy-to-use tool, especially in applications that require complex state management and asynchronous data exchange.
+date: "2023-12-07T20:27:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701970059/q0q8appdo628umhzbvhh.jpg" alt="onurtaskiran" />
+
+React Query is an easy-to-use tool, especially in applications that require complex state management and asynchronous data exchange. The library offers a number of features to optimize data management processes in React applications. React Query facilitates operations such as fetching data from remote servers, caching and state management. Compared to setting requests with UseEffect, React Query provides a more declarative and centralized approach to data management in React; This results in cleaner and more efficient code. It also reduces boilerplate code and improves performance by minimizing unnecessary rebuilds and network requests.
+
+We will create a simple task list management system using a Node.js application and the Express.js framework. Our application will create a web server and handle task data by responding to HTTP GET, POST, PATCH, and DELETE requests. This system will allow users to view existing tasks, add new tasks, update existing tasks, and delete tasks. Additionally, it will permit requests from different origins using CORS (Cross-Origin Resource Sharing) middleware, overcoming security policies in browser-based applications. With this simple API, we are providing a RESTful service that performs basic CRUD (Create, Read, Update, Delete) operations and offers a server-side interface for task management to users.
+
+server.js
+```javascript
+import express from 'express';
+import cors from 'cors';
+
+const app = express();
+const port = 5000;
+
+app.use(cors());
+app.use(express.json());
+
+let tasks = [
+  { id: 1, title: 'Task 1', isDone: false },
+  { id: 2, title: 'Task 2', isDone: true },
+];
+
+app.get('/', (req, res) => {
+  res.send('<h1>Hello From Server...</h1>');
+});
+
+app.get('/api/tasks', (req, res) => {
+  res.json({ taskList: tasks });
+});
+
+app.post('/api/tasks', (req, res) => {
+  const { title } = req.body;
+  const newTask = { id: tasks.length + 1, title, isDone: false };
+  tasks.push(newTask);
+  res.json(newTask);
+});
+
+app.patch('/api/tasks/:id', (req, res) => {
+  const { id } = req.params;
+  const { title, isDone } = req.body;
+
+  const taskIndex = tasks.findIndex(task => task.id === parseInt(id));
+
+  if (taskIndex !== -1) {
+    tasks[taskIndex] = { ...tasks[taskIndex], title, isDone };
+    res.json(tasks[taskIndex]);
+  } else {
+    res.status(404).json({ error: 'Task not found' });
+  }
+});
+
+app.delete('/api/tasks/:id', (req, res) => {
+  const { id } = req.params;
+  tasks = tasks.filter(task => task.id !== parseInt(id));
+  res.json({ success: true });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
+```
+
+This code includes an Express.js application providing basic CRUD (Create, Read, Update, Delete) operations through an API. Let's break down the code step by step:
+
+Using Express and CORS:
+```javascript
+import express from 'express';
+import cors from 'cors';
+
+const app = express();
+const port = 5000;
+
+app.use(cors());
+app.use(express.json());
+```
+
+Imports the express and cors modules. Creates an Express application and enables CORS policies. Uses the express.json() middleware to work with JSON data.
+
+Task Data:
+
+```javascript
+let tasks = [
+  { id: 1, title: 'Task 1', isDone: false },
+  { id: 2, title: 'Task 2', isDone: true },
+  // ... other tasks
+];
+```
+Creates a simple array of tasks.
+
+Home Route:
+```javascript
+app.get('/', (req, res) => {
+  res.send('<h1>Hello From Server...</h1>');
+});
+```
+
+Sends the message "Hello From Server..." when a request is made to the home route.
+
+Task List Route:
+
+```javascript
+app.get('/api/tasks', (req, res) => {
+  res.json({ taskList: tasks });
+});
+```
+
+Returns the task list in JSON format through the /api/tasks route.
+
+Task Addition Route:
+
+```javascript
+app.post('/api/tasks', (req, res) => {
+  const { title } = req.body;
+  const newTask = { id: tasks.length + 1, title, isDone: false };
+  tasks.push(newTask);
+  res.json(newTask);
+});
+```
+Handles a POST request to /api/tasks and adds a new task.
+
+Task Update Route:
+```javascript
+app.patch('/api/tasks/:id', (req, res) => {
+  const { id } = req.params;
+  const { title, isDone } = req.body;
+
+  const taskIndex = tasks.findIndex(task => task.id === parseInt(id));
+
+  if (taskIndex !== -1) {
+    tasks[taskIndex] = { ...tasks[taskIndex], title, isDone };
+    res.json(tasks[taskIndex]);
+  } else {
+    res.status(404).json({ error: 'Task not found' });
+  }
+});
+```
+
+Handles a PATCH request to /api/tasks/:id and updates a specific task.
+
+Task Deletion Route:
+
+```javascript
+app.delete('/api/tasks/:id', (req, res) => {
+  const { id } = req.params;
+  tasks = tasks.filter(task => task.id !== parseInt(id));
+  res.json({ success: true });
+});
+```
+
+Handles a DELETE request to /api/tasks/:id and deletes a specific task.
+Listening to the Application:
+
+```javascript
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
+```
+
+Starts listening to the application on the specified port.
+This way, you've created a simple API using Express.js to perform CRUD operations.
+
+```javascript
+npm install axios
+```
+```javascript
+npm install react-query
+```
+Query: Queries, the foundation of React Query, typically represent data fetching operations. A query includes a function (fetch function) and a key that will cache the result of this operation. An example query:
+
+```javascript
+const { data, error, isLoading } = useQuery('exampleQueryKey', fetchDataFunction);
+```
+
+Mutation: Used to modify or update data. A mutation consists of a function and an array of callback functions to handle the result of this operation.
+
+```javascript
+const mutation = useMutation(updateDataFunction, {
+  onSuccess: () => {
+    // Actions to perform when successfully completed
+  },
+});
+```
+
+Caching: React Query enhances performance by caching data. Instead of sending a network request every time the same data is accessed, it retrieves the data from the cache.
+
+App.js
+```javascript
+import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import TaskList from './components/TaskList';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <div>
+        <TaskList />
+    
+      </div>
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+```
+
+The QueryClientProvider component is used to provide the queryClient to all child components. This enables child components to manage data and utilize the React Query library.
+
+TaskList.js
+```javascript
+import React from 'react';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import axios from 'axios';
+
+const fetchTasks = async () => {
+  const response = await axios.get('http://localhost:5000/api/tasks');
+  return response.data;
+};
+
+const createTask = async (newTask) => {
+  const response = await axios.post('http://localhost:5000/api/tasks', newTask);
+  return response.data;
+};
+
+const updateTask = async (updatedTask) => {
+  console.log('Update Task:', updatedTask); 
+
+  const response = await axios.patch(
+    `http://localhost:5000/api/tasks/${updatedTask.id}`,
+    updatedTask
+  );
+  return response.data;
+};
+
+const deleteTask = async (taskId) => {
+  const response = await axios.delete(`http://localhost:5000/api/tasks/${taskId}`);
+  return response.data;
+};
+
+const TaskList = () => {
+  const queryClient = useQueryClient();
+
+  const { data: tasks, isLoading } = useQuery('tasks', fetchTasks);
+
+  const createMutation = useMutation(createTask, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('tasks');
+    },
+  });
+
+  const updateMutation = useMutation(updateTask, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('tasks');
+    },
+  });
+
+  const deleteMutation = useMutation(deleteTask, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('tasks');
+    },
+  });
+
+  const handleCreate = () => {
+    const taskName = prompt('Enter task name:');
+    if (taskName) {
+      createMutation.mutate({ title: taskName });
+    }
+  };
+
+  const handleUpdate = (task) => {
+    console.log('Task:', task);
+
+    const updatedName = prompt('Enter the updated name:', task.title);
+    const isDone = prompt('Is the task done? (true/false)', task.isDone);
+
+    if (updatedName !== null && isDone !== null) {
+      updateMutation.mutate({
+        id: task.taskId,
+        title: updatedName,
+        isDone: JSON.parse(isDone),
+      });
+    }
+  };
+
+  const handleDelete = (taskId) => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      deleteMutation.mutate(taskId);
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <h1>Task List</h1>
+      <button onClick={handleCreate}>Add Task</button>
+      <ul>
+        {tasks.taskList.map((task) => (
+          <li key={task.id}>
+            {task.title}
+            <button
+              onClick={() =>
+                handleUpdate({
+                  taskId: task.id,
+                  title: task.title,
+                  isDone: !task.isDone,
+                })
+              }
+            >
+              Update
+            </button>
+            <button onClick={() => handleDelete(task.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default TaskList;
+```
+
+This React application creates a task list using React Query and Axios. Axios is used for making HTTP requests, while React Query manages tasks by handling caching, updates, and storage in the cache. The application includes functions for fetching, adding, updating, and deleting tasks. The task list is displayed in the user interface, providing options for updating and deleting each task. Event handlers interact with user input to perform operations, enabling the application to work interactively.
+
+Import Statements:
+
+```javascript
+import React from 'react';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import axios from 'axios';
+```
+
+useQuery, useMutation, and useQueryClient are React Query hooks for managing queries and mutations.
+axios is a popular library for making HTTP requests.
+
+Async Functions for API Requests:
+```javascript
+const fetchTasks = async () => {
+  const response = await axios.get('http://localhost:5000/api/tasks');
+  return response.data;
+};
+
+const createTask = async (newTask) => {
+  const response = await axios.post('http://localhost:5000/api/tasks', newTask);
+  return response.data;
+};
+
+const updateTask = async (updatedTask) => {
+  const response = await axios.patch(
+    `http://localhost:5000/api/tasks/${updatedTask.id}`,
+    updatedTask
+  );
+  return response.data;
+};
+
+const deleteTask = async (taskId) => {
+  const response = await axios.delete(`http://localhost:5000/api/tasks/${taskId}`);
+  return response.data;
+};
+```
+fetchTasks: Sends a GET request to retrieve tasks.
+
+createTask: Sends a POST request to create a new task.
+
+updateTask: Sends a PATCH request to update an existing task.
+
+deleteTask: Sends a DELETE request to delete a task.
+
+TaskList Component:
+```javascript
+const TaskList = () => {
+  // ...
+};
+```
+Initializes the useQueryClient hook for managing the query cache.
+
+useQuery Hook:
+```javascript
+const { data: tasks, isLoading } = useQuery('tasks', fetchTasks);
+```
+Uses the useQuery hook to fetch tasks. The query key is 'tasks', and it invokes the fetchTasks function.
+
+useMutation Hooks:
+```javascript
+const createMutation = useMutation(createTask, {
+  onSuccess: () => {
+    queryClient.invalidateQueries('tasks');
+  },
+});
+
+const updateMutation = useMutation(updateTask, {
+  onSuccess: () => {
+    queryClient.invalidateQueries('tasks');
+  },
+});
+
+const deleteMutation = useMutation(deleteTask, {
+  onSuccess: () => {
+    queryClient.invalidateQueries('tasks');
+  },
+});
+```
+
+createMutation, updateMutation, and deleteMutation are mutation hooks. They handle the creation, updating, and deletion of tasks, respectively.
+
+onSuccess callbacks invalidate the 'tasks' query in the cache, triggering a refetch.
+
+Event Handlers:
+```javascript
+const handleCreate = () => {
+  // ...
+};
+
+const handleUpdate = (task) => {
+  // ...
+};
+
+const handleDelete = (taskId) => {
+  // ...
+};
+```
+
+handleCreate: Prompts the user for a task name and calls createMutation to add a new task.
+
+handleUpdate: Prompts the user for updated task information and calls updateMutation to modify the task.
+
+handleDelete: Asks for confirmation before calling deleteMutation to remove a task.
+
+Rendering:
+```javascript
+if (isLoading) {
+  return <div>Loading...</div>;
+}
+
+return (
+  <div>
+    {/* ... */}
+  </div>
+);
+```
+
+Displays a loading message if data is still being fetched. Renders the main component structure if data is available.
+
+This refactored code uses Axios for HTTP requests and React Query for managing state and caching. The use of hooks and the modular structure make the code more readable and maintainable.
+
+In this way, a task management application is created using React Query to effectively manage data fetching, adding, updating, and deleting operations.
+
+Happy Coding

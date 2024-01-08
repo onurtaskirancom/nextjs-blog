@@ -1,0 +1,111 @@
+---
+title: React UseCallback Hook
+description: In React, we may sometimes experience slowdown problems due to unnecessary component renderings. There are many ways to solve these problems in React.
+date: "2023-09-24T17:35:00"
+---
+
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1698158104/sxspklnrlq1n6g8dzvfc.jpg" alt="onurtaskiran" />
+
+In React, we may sometimes experience slowdown problems due to unnecessary component renderings. There are many ways to solve these problems in React. We do not use UseCallback very often in our projects, but when we do, our application is much better in terms of performance. useCallback hook is a hook used to optimize performance and memory usage in React applications. useCallback is specifically used to prevent functions from being created repeatedly. This is especially beneficial from a performance perspective because it reduces unnecessary function creations and re-rendering. In useCallback, we enter a dependencies array, just like in useEffect. If the dependencies array we entered changes, then the function is recalculated.
+
+The basic usage of useCallback is as follows:
+
+```javascript
+const memoizedCallback = useCallback(
+  () => {
+    // Define the function's tasks here
+  },
+  [dependencies]
+);
+```
+A simple example:
+```javascript
+import React, { useState, useCallback } from 'react';
+
+const MyComponent = () => {
+  const [count, setCount] = useState(0);
+
+  const increment = useCallback(() => {
+    setCount(count + 1);
+  }, [count]);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+```
+In this example, if the component is re-rendered when count changes, the increment function is also recreated. Thanks to useCallback, the increment function is only recreated when count changes, otherwise it is stored in memory.
+
+An advanced example
+
+Here's an example using useCallback for the To-Do List app. This example allows you to add new items and delete items to the To-Do List.
+
+```javascript
+import React, { useState, useCallback } from 'react';
+
+const TodoItem = ({ id, text, onDelete }) => {
+  const handleDelete = useCallback(() => {
+    onDelete(id);
+  }, [id, onDelete]);
+
+  return (
+    <div>
+      <span>{text}</span>
+      <button onClick={handleDelete}>Sil</button>
+    </div>
+  );
+};
+
+const UseCallback = () => {
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState('');
+
+  const addTodo = useCallback(() => {
+    if (newTodo) {
+      setTodos((prevTodos) => [
+        ...prevTodos,
+        { id: Date.now(), text: newTodo },
+      ]);
+      setNewTodo('');
+    }
+  }, [newTodo]);
+
+  const deleteTodo = useCallback((todoId) => {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
+  }, []);
+
+  return (
+    <div>
+      <h1>To do list</h1>
+      <input
+        type="text"
+        value={newTodo}
+        onChange={(e) => setNewTodo(e.target.value)}
+      />
+      <button onClick={addTodo}>Ekle</button>
+      <div>
+        {todos.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            id={todo.id}
+            text={todo.text}
+            onDelete={deleteTodo}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default UseCallback;
+```
+
+In this example, the TodoItem component represents each to-do item. TodoItem deletes an item using the onDelete callback. The TodoList component manages the to-do list, adding new items and deleting items. Prevents unnecessary re-creation of useCallback, handleDelete, addTodo and deleteTodo functions.
+
+This example shows how useCallback can be used to add and delete items in a to-do list application.

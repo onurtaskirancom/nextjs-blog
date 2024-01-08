@@ -1,0 +1,101 @@
+---
+title: Pushing Code to Github
+description: Managing software development projects and collaborating with other software developers is very important. Using GitHub for managing and collaborating on projects is very popular.
+date: "2023-12-02T05:21:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701517700/m67x1adq9mfuxilifzpx.jpg" alt="onurtaskiran" />
+
+Managing software development projects and collaborating with other software developers is very important. Using GitHub for managing and collaborating on projects is very popular. GitHub allows users to host their projects, perform version control, and collaborate with other users. GitHub is a common collaboration platform for open source projects, but also supports private projects. It is used to make the software development processes of both individuals and large companies more effective and collaborative.
+
+If you don't have an account, I recommend going to GitHub and creating one. Creating an account on GitHub is quite simple. How will we push our code to GitHub? This process is very simple. First, we go to GitHub and log in. Then we click create a new repository in a control panel.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701481897/u3w82jftmqkrqjg5i52b.jpg" alt="onurtaskiran" />
+
+Determine and create a repository name
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701482034/tq4jxnchw1xi2p53bhjb.jpg" alt="onurtaskiran" />
+
+The important thing here is to create the .gitignore file. We don't want to deploy everything from our projects to the GitHub repository. For example, we add node_modules to .gitignore.
+
+```javascript
+/node_modules
+```
+Now let's continue with the commands. The first command is git init.
+```javascript
+git init
+```
+The second command is git status
+```javascript
+git status
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701482274/fcrx8zhqzdhh2zr96lma.jpg" alt="onurtaskiran" />
+
+Notice there is no node module here. Git status will be listed. Now you can transfer all your files and folders to the GitHub repository.
+
+Our next command
+```javascript
+git add .
+```
+It means I want to include all files. We execute the git status command again.
+
+```javascript
+git status
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701482628/xcwazbpi8ol4iyfwssqv.jpg" alt="onurtaskiran" />
+
+All files should now be green so they are ready to be processed. Our next command will be writing a commit message. The message must be meaningful for your project
+
+```javascript
+git commit -m "Data Model created"
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701482996/tiqui4kadqypkfuuautn.jpg" alt="onurtaskiran" />
+
+```javascript
+git status
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701483115/fhp8g1era6cpcd3xhmj0.jpg" alt="onurtaskiran" />
+
+Here you will see that there is nothing to commit in Branch Master.
+```javascript
+git branch -M master
+```
+Next code
+```javascript
+git remote add origin https://github.com/onurtaskirancom/ecommerce-api.git
+```
+Go here and type remote -v and you will see that you have a remote branch.
+```javascript
+git remote -v 
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701483311/bpptre4bpqatqphn5rls.jpg" alt="onurtaskiran" />
+
+Now our local code and remote repository are connected. Now we can push our code to GitHub repository with git command.
+
+```javascript
+git push -u origin master
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701483424/lghjofuhykdcec043ori.jpg" alt="onurtaskiran" />
+
+All of our code has been pushed to GitHub. I go to the browser and I should see your code here.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1701483494/oz0bb7jihbkliaf6ctyw.jpg" alt="onurtaskiran" />
+
+This is perfect
+
+The commands I wrote respectively.
+
+```javascript
+git init
+git status
+git add .
+git status
+git commit -m "first commit"
+git status
+git branch -M master
+git remote add origin https://github.com/onurtaskirancom/MernEcommerceApi.git
+git remote -v 
+git push -u origin master
+```
+
+Happy coding.

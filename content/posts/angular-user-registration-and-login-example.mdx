@@ -1,0 +1,661 @@
+---
+title: Angular User Registration and Login Example
+description: What are we gonna do, first of all, a home page will greet us with a welcome. We will have two buttons named register and login.
+date: "2022-05-06T05:12:00"
+---
+
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671156780/vtpkaawl04g9srhl3zqf.jpg" alt="onurtaskiran" />
+
+What are we gonna do, first of all, a home page will greet us with a welcome. We will have two buttons named register and login. When you click Register, our registration page will come up asynchronously. At the same time, when you click login, our login page will open in the same way. When logged in, the navbar will write a welcome user and there will be a logout button. Let 's do it
+
+<img className="w-6/12" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704634890/whzfu2dkl7z3ztsjybry.jpg" alt="onurtaskiran" />
+<img className="w-6/12" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704634890/qavwkp0rcl22xlv5nukw.jpg" alt="onurtaskiran" />
+
+Angular versions: Angular 11, 10, 9, 8, 7, 6, 2/5
+
+User Model
+Path: /src/app/_models/user.ts
+
+We define a small class that defines the properties of a user.
+
+```javascript
+export interface User {
+  username: string;
+  token: string;
+}
+```
+Account Service
+
+Path: /src/app/_services/account.service.ts
+
+Here we perform the methods for login, logout, and registration, and the standard methods for retrieving and modifying user data.
+
+```javascript
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import {map} from 'rxjs/operators';
+import { User } from '../_models/user';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AccountService {
+  baseUrl = 'https://localhost:5001/api/';
+  private currentUserSource = new ReplaySubject<User>(1);
+  currentUser$ = this.currentUserSource.asObservable();
+
+  constructor(private http: HttpClient) { }
+
+  login(model: any) {
+    return this.http.post(this.baseUrl + 'account/login', model).pipe(
+      map((response: User) =>{
+        const user = response;
+        if (user) {
+          localStorage.setItem('user',JSON.stringify(user));
+          this.currentUserSource.next(user);
+        }
+      })
+    )
+  }
+
+  register(model: any) {
+    return this.http.post(this.baseUrl + 'account/register', model).pipe(
+      map((user: User) => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSource.next(user);
+        }
+      })
+    )
+  }
+
+  setCurrentUser(user:User) {
+    this.currentUserSource.next(user);
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.currentUserSource.next(null);
+  }
+}
+```
+
+Home Component Template
+
+Path: /src/app/home/home.component.html
+
+what will we do here, first of all We welcome the client with a welcome message and send them to the login or registration form.
+
+We transfer this process to the registration form with the *ngIf="registerMode" code or send it to the login form with the *ngIf="loginMode"  code.
+
+```javascript
+<div class="container mt-5">
+  <div *ngIf="!registerMode && !loginMode" style='text-align: center;'>
+    <h1>Welcome to My WebSite</h1>
+     <p class="">All you need to do is sign up! or log in</p>
+
+     <div class="text-center">
+      <button (click)="registerToggle()" class="btn btn-primary btn-lg mr-2">Register</button>
+      <button (click)="loginToggle()" class="btn btn-info btn-lg">Login</button>
+     </div>
+  </div>
+
+    <div *ngIf="registerMode" class="container">
+      <div class="row justify-content-center">
+        <div class="col-4">
+          <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loginMode" class="container">
+      <div class="row justify-content-center">
+        <div class="col-4">
+          <app-login (cancelLogin)="cancelLoginMode($event)"></app-login>
+        </div>
+      </div>
+    </div>
+
+</div>
+```
+
+Home Component
+
+Path: /src/app/home/home.component.ts
+
+Here we are just creating a method called register toggle. The only purpose of this function is to take our registered and set it to the opposite of lists
+
+```javascript
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
+})
+export class HomeComponent implements OnInit {
+  registerMode = false;
+  loginMode = false;
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  registerToggle() {
+    this.registerMode = !this.registerMode;
+
+  }
+
+  loginToggle() {
+    this.loginMode = !this.loginMode;
+
+  }
+
+  cancelRegisterMode(event: boolean) {
+    this.registerMode = event;
+  }
+
+  cancelLoginMode(event: boolean) {
+    this.loginMode = event;
+  }
+
+}
+```
+
+Login Component Template
+
+Path: /src/app/login/login.component.html
+
+We send the username and password fields to the control angular infrastructure and the login process takes place securely.
+
+```javascript
+<main class="form-signin">
+  <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="" (ngSubmit)="login()" autocomplete="off">
+    <h1 class="h3 mb-3 fw-normal text-info">Login Panel</h1>
+    <hr>
+    <label for="inputEmail" class="visually-hidden">Username</label>
+    <input
+        name="username"
+        [(ngModel)]="model.username"
+        class="form-control"
+        type="text"
+        placeholder="Username">
+    <label for="inputPassword" class="visually-hidden">Password</label>
+    <input
+        name="password"
+        [(ngModel)]="model.password"
+        class="form-control"
+        type="password"
+        placeholder="Password">
+    <div class="checkbox mb-3">
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
+    <button class="w-100 btn btn-lg btn-default" (click)="cancel()" type="button">Cancel</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+  </form>
+</main>
+```
+
+Login Component
+
+Path: /src/app/login/login.component.ts
+
+We use the account service to sign in
+
+```javascript
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { AccountService } from '../_services/account.service';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+  @Output() cancelLogin = new EventEmitter()
+  model: any = {}
+
+  constructor(public accountService: AccountService) { }
+
+  ngOnInit(): void {
+  }
+
+  login() {
+    this.accountService.login(this.model).subscribe(response => {
+      console.log(response);
+    }, error =>{
+      console.log(error);
+    })
+  }
+
+  logout() {
+    this.accountService.logout();
+  }
+
+  cancel() {
+    this.cancelLogin.emit(false);
+  }
+
+}
+```
+
+Nav Component Template
+
+Path: /src/app/nav/nav.component.html
+
+We make a design that can log out with the navbar after the user logs in.
+
+```javascript
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">Login App</a>
+
+      <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="accountService.currentUser$ | async">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="#">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Settings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Messages</a>
+        </li>
+      </ul>
+	  
+      <div class="dropdown" *ngIf="accountService.currentUser$ | async" dropdown>
+        <a class="dropdown-toggle text-light" dropdownToggle>welcome user</a>
+        <div class="dropdown-menu mt-3" *dropdownMenu>
+          <a class="dropdown-item">Edit Profile</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()">Logout</a>
+        </div>
+      </div>
+  </div>
+</nav>
+```
+
+Nav Component
+
+Path: /src/app/nav/nav.component.ts
+
+We are adding our logout service here.
+
+```javascript
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from '../_models/user';
+import { AccountService } from '../_services/account.service';
+
+@Component({
+  selector: 'app-nav',
+  templateUrl: './nav.component.html',
+  styleUrls: ['./nav.component.css']
+})
+export class NavComponent implements OnInit {
+  model: any = {}
+
+  constructor(public accountService: AccountService) { }
+
+  ngOnInit(): void {
+  }
+  
+    logout() {
+    this.accountService.logout();
+  }
+
+}
+```
+
+
+Register Component Template
+
+Path: /src/app/register/register.component.html
+
+The registration component template includes a simple registration form with username and password fields. We send username with [(ngModel)]="model.username"  code and [(ngModel)]="model.password" code and user password to the registration form.
+
+```javascript
+<form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off">
+  <h2 class="text-center text-primary">Sign up</h2>
+
+  <hr>
+  <div class="form-group">
+    <input type="text" class="form-control" name="username"
+        [(ngModel)]="model.username" placeholder="Username">
+  </div>
+
+  <div class="form-group">
+    <input type="password" class="form-control" name="password"
+        [(ngModel)]="model.password" placeholder="Password">
+  </div>
+  <div class="form-group text-center">
+    <button class="btn btn-success mr-2" type="submit">Register</button>
+    <button class="btn btn-default mr-2" (click)="cancel()" type="button">Cancel</button>
+  </div>
+</form>
+```
+
+Register Component
+
+Path: /src/app/register/register.component.ts
+
+Once the registration form is successful and successfully submitted, it creates a new user with the account service.
+
+```javascript
+import { Component, Input, OnInit, Output,EventEmitter } from '@angular/core';
+import { AccountService } from '../_services/account.service';
+
+
+@Component({
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
+})
+export class RegisterComponent implements OnInit {
+  @Output() cancelRegister = new EventEmitter();
+  model: any = {};
+
+  constructor(private accountService: AccountService) { }
+
+  ngOnInit(): void {
+  }
+
+  register() {
+    this.accountService.register(this.model).subscribe(response =>{
+      console.log(response);
+      this.cancel();
+    }, error => {
+      console.log(error);
+    })
+  }
+
+  cancel() {
+    this.cancelRegister.emit(false);
+  }
+
+}
+```
+
+App Routing Module
+
+Path: /src/app/app-routing.module.ts
+
+The application routing module defines the top-level routes for angular application and creates a root routing module by forwarding the path sequence to the RouterModule.
+
+```javascript
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+App Component Template
+
+Path: /src/app/app.component.html
+
+This component is the root component template for the application. It includes the main navigation bar, which is displayed only for authenticated users, and a general alert component, as well as a redirector output component to display the contents of each view according to the current path.
+
+```javascript
+<app-nav></app-nav>
+
+<div class="container" style="margin-top: 100px">
+<app-home></app-home>
+</div>
+```
+
+App Component
+
+Path: /src/app/app.component.ts
+
+app.component.ts is the root component of the application, the application can be set the root tag with the property of the @Component () decorator.
+
+```javascript
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { User } from './_models/user';
+import { AccountService } from './_services/account.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  title = 'The Dating App';
+  users: any;
+
+  constructor(private accountService: AccountService){}
+
+  ngOnInit() {
+    this.setCurrentUser();
+  }
+
+  setCurrentUser() {
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    this.accountService.setCurrentUser(user);
+  }
+
+}
+```
+
+App Module
+
+Path: /src/app/app.module.ts
+
+This is the root module of our application.
+
+```javascript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import {HttpClientModule} from  '@angular/common/http';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { NavComponent } from './nav/nav.component';
+import { FormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    NavComponent,
+    HomeComponent,
+    RegisterComponent,
+    LoginComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    BsDropdownModule.forRoot()
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+Production Environment Config
+
+Path: /src/environments/environment.prod.ts
+
+```javascript
+export const environment = {
+  production: true
+};
+```
+
+Development Environment Config
+
+Path: /src/environments/environment.ts
+
+```javascript
+export const environment = {
+  production: false
+};
+```
+
+Main Index Html 
+
+Path: /src/index.html
+
+The main index.html file is this file. It is the first page that started everything. Angular CLI gathers all compiled javascript files and injects them there
+
+```javascript
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DatingApp</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+```
+
+Main File
+
+Path: /src/main.ts
+
+It is the entry point where the application is launched and preloaded by angular.
+
+```javascript
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+```
+
+Polyfills
+
+Path: /src/polyfills.ts
+
+This file is created automatically by the Angular CLI when creating a new project with the ng new command, and also allows the App to run on all major browsers.
+
+```javascript
+import 'zone.js/dist/zone';
+```
+
+Npm package.json
+
+Path: /package.json
+
+Package.json file, package dependencies installed with npm and npm start or npm run build etc. contains information about scripts.
+
+```javascript
+{
+  "name": "client",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~11.2.0",
+    "@angular/common": "~11.2.0",
+    "@angular/compiler": "~11.2.0",
+    "@angular/core": "~11.2.0",
+    "@angular/forms": "~11.2.0",
+    "@angular/platform-browser": "~11.2.0",
+    "@angular/platform-browser-dynamic": "~11.2.0",
+    "@angular/router": "~11.2.0",
+    "@schematics/angular": "^9.1.0",
+    "bootstrap": "4.1.1",
+    "font-awesome": "^4.7.0",
+    "ngx-bootstrap": "^6.2.0",
+    "rxjs": "~6.6.0",
+    "tslib": "^2.0.0",
+    "zone.js": "~0.11.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.1102.0",
+    "@angular/cli": "~11.2.0",
+    "@angular/compiler-cli": "~11.2.0",
+    "@types/jasmine": "~3.6.0",
+    "@types/node": "^12.11.1",
+    "codelyzer": "^6.0.0",
+    "jasmine-core": "~3.6.0",
+    "jasmine-spec-reporter": "~5.0.0",
+    "karma": "~6.1.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.0.3",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "protractor": "~7.0.0",
+    "ts-node": "~8.3.0",
+    "tslint": "~6.1.0",
+    "typescript": "~4.1.2"
+  }
+}
+```
+
+TypeScript tsconfig.json
+
+Path: /tsconfig.json
+
+It tells you how to pass TypeScript code into JavaScript understood by the browser.
+
+```javascript
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": false,
+    "strictInputAccessModifiers": false,
+    "strictTemplates": false
+  }
+}
+```

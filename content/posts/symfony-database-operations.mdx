@@ -1,0 +1,52 @@
+---
+title: Symfony Database Operations
+description: There are many methods of capturing data.
+date: "2022-01-16T04:19:00"
+---
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671153552/njqwljtcq4aykeaoagyn.png" alt="onurtaskiran" />
+
+There are many methods of capturing data. I'll convey what I know. For example: we created a table called tal_news. When writing the table name in Symfony, we write the first letters uppercase, make the table name TalNews (Capital letters must come after the first letter and underscore)
+
+The simplest way is to pull all the data from our tal_reseller table with findAll.
+
+```javascript
+  $em       = $this->getDoctrine()->getEntityManager();
+  $members = $em->getRepository('ModulesAdminBundle:TalReseller')->findAll();
+```
+Let's find the ones with status 1 in our activity table
+
+```javascript
+$em = $this->getDoctrine()->getEntityManager();
+$activity = $em->getRepository('ModulesAdminBundle:Activity')->findBy(array('status'=>1));
+```
+
+Let's do the same with the select statement in the tal_news table... In some cases we cannot use the above method. Select method solves this problem
+
+```javascript
+$em = $this->getDoctrine()->getEntityManager();
+$news = $em->createQuery("SELECT t FROM ModulesAdminBundle:TalNews t where t.status=1")->getResult();
+```
+
+If the TalReseller id and the ResellerImages id are the same here, we say perform the process
+
+```javascript
+public function portfolyoAction($id,$fullname)
+    {
+        $em       = $this->getDoctrine()->getEntityManager();
+        $id = intval($id);
+
+        $portfol = $em->getRepository('ModulesAdminBundle:TalReseller')->findOneBy(array('id'=>$id));
+        if($portfol){
+            $ResellerImages = $em->getRepository('ModulesAdminBundle:ResellerImages')->findBy(array('resellerId'=>$id));
+        }else{
+            return $this->redirect('/');
+        }
+		
+		
+		 return $this->render('ModulesUiBundle:Profil:profil.html.twig',array(
+            'portfol'           => $portfol,
+            'ResellerImages'    => $ResellerImages,
+
+        ));
+    }
+    ```

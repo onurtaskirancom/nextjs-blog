@@ -1,0 +1,209 @@
+---
+title: Scop Concept in Javascript
+description: The concept of scope is quite easy and very important topic in javascript. So let's delve deeper into this issue. Scope is the ability of our other code pieces to access this value or not
+date: "2023-04-09T14:29:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1681040611/gmbcewjxjdgywyilkxfk.jpg" alt="onurtaskiran" />
+
+The concept of scope is quite easy and very important topic in javascript. So let's delve deeper into this issue. Scope is the ability of our other code pieces to access this value or not, depending on where the variable defined is located. In other words, we can access variables, objects, functions according to their scope in various parts of our code. There are several types of scopes in Javascript, they are: global scope, local scope, function scope, block scope, and lexical scope.
+
+Global Scop
+
+If our variable is defined outside the function it is a global scope
+
+```javascript
+let name = "Onur";
+
+function user() {
+    console.log(name);
+}
+
+user();
+```
+```javascript
+output: Onur
+```
+
+here our variable name has become global and we can access it from anywhere.
+
+Local Scope
+
+Defining a variable or function in the current code block is called local. so local scope is not limited to functions only.
+
+```javascript
+let name = 'Onur';
+
+function user() {
+  let lastName = 'Taskiran';
+}
+
+user();
+console.log("Last Name" + lastName);
+```
+```javascript
+output: ...Uncaught ReferenceError: lastName is not defined
+```
+
+In the above example we get an error because the scope of the lastName variable is inside the function. Actually, lastName is defined but it's defined in local Scope, so we can only access it inside the function. This is a good example of local scope
+
+The correct code is as follows.
+
+```javascript
+let name = 'Onur';
+
+function user() {
+  let lastName = 'Taskiran';
+  console.log('name:' + name + ' Last Name:' + lastName);
+}
+
+user();
+```
+
+Our variable name is local scope and lastName is global scope.
+
+Function Scope
+
+When we declare a variable inside a function, we can access the variable only within that function and cannot be used outside of that function.
+
+Now let me give a good example of function scope.
+
+```javascript
+function person() {
+  let user = 'Tom';
+  const age = '30';
+  console.log(age);
+}
+
+function otherList() {
+  let category = 'js';
+  const age = '20';
+  console.log(age);
+}
+
+person();
+otherList();
+```
+```javascript
+output: 30
+       20
+```
+
+Block Scope
+
+```javascript
+if(true) {
+  let color = 'blue';
+}
+console.log(color);
+```
+```javascript
+output: Uncaught ReferenceError: color is not defined
+```
+
+So what does this tell us? This tells us that our color variable is scoped inside the conditional element. The block scope is the scope shown inside the { } curly brackets set.
+
+```javascript
+if(true) {
+  let color = 'blue';
+  console.log(color);
+}
+```
+```javascript
+output: blue
+```
+
+That's how it works.
+
+if i define my variable as var in my code
+
+```javascript
+if (true) {
+  var color = 'blue';
+}
+console.log(color);
+```
+```javascript
+output: blue
+```
+
+our code will work.
+
+In javascript we used to only declare variables with var. If we declare a variable using var in any block, it will not be scoped to that block. and this can cause problems. This is one of the reasons let and const were added to create constants in JavaScript.
+
+So why might this be problematic? What's wrong with a variable being accessible within a block? There are many reasons for this. Let's examine with an example
+
+```javascript
+let color = ['Blue', 'Dark', 'Red'];
+for (var i = 0; i < color.length; i++) {
+  console.log(i, color[i]);
+}
+```
+```javascript
+output: 
+0 'Blue'
+1 'Dark'
+2 'Red'
+```
+```javascript
+let color = ['Blue', 'Dark', 'Red'];
+var i = 5;
+for (var i = 0; i < color.length; i++) {
+  console.log(i, color[i]);
+}
+console.log(i);
+```
+```javascript
+output: 
+0 'Blue'
+1 'Dark'
+2 'Red'
+3
+```
+
+The variable i became 3 instead of 5. so this can cause us problems when we rely on a variable named i.
+
+Since we are using Var, there is no block scope. so we have a hard time knowing exactly where we stand.
+
+Now let's do it with let
+
+```javascript
+let color = ['Blue', 'Dark', 'Red'];
+var i = 5;
+for (let i = 0; i < color.length; i++) {
+  console.log(i, color[i]);
+}
+console.log(i);
+```
+```javascript
+output: 
+0 'Blue'
+1 'Dark'
+2 'Red'
+5
+```
+At the bottom we see that the value of i is 5. because the variable i in the loop is only scoped to the block in the for loop.
+
+Lexical Scope
+
+Lexical scope is when a function scope accesses variables in the outer or parent scope.
+
+```javascript
+function parent() {
+  let color = 'white';
+
+  function child() {
+    console.log(color);
+  }
+  child();
+}
+
+parent(); 
+```
+```javascript
+output: white
+```
+
+So lexical scope is that nested functions are lexically linked.
+
+Happy coding.

@@ -1,0 +1,89 @@
+---
+title: React Context Api
+description: Context Api allows us to transfer data that each component can use. So the context api gives us global data. When transferring data through props in nested components
+date: "2023-09-02T18:34:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1693668724/w1ovb8py838czz4ifiig.jpg" alt="onurtaskiran" />
+
+Context Api allows us to transfer data that each component can use. So the context api gives us global data. When transferring data through props in nested components, we have props hells with the branching method. To get rid of props hell, we define a Global data (context Api) so we can send the same data to all components via context api, no matter how many components we have.
+
+For example, we have a nested structure. So we want to go to the Navbar and get the nav links first.
+
+First of all, we create a components folder. And in this components folder, we create our Navbar.jsx file where we will show the data from the context. Here we want to use the context hook. Again, just like you mentioned use effect and others this also comes from React.
+
+```javascript
+import React, { useContext } from 'react';
+import { NavbarContext } from '../Context/NavContext';
+
+const Navbar = () => {
+  const { user, id } = useContext(NavbarContext);
+  return (
+    <div>
+      <h2>Context id: {id}</h2>
+      <h2>Context user: {user}</h2>
+    </div>
+  );
+};
+export default Navbar;
+```
+We are creating our NavLink.jsx file with links to our component folder.
+```javascript
+const NavLinks = () => {
+  return (
+    <div className="nav-container">
+      <ul className="nav-links">
+        <li>
+          <a href="#">home</a>
+        </li>
+        <li>
+          <a href="#">about</a>
+        </li>
+        <li>
+          <a href="#">contact</a>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+export default NavLinks;
+```
+I create folder named Context and then I create my file named NavContext.jsx. Here I am creating the createContext. crateContext allows us to create context. I have sent the context structure I created to NavbarContext. then I return the data from the props, that is, we send the data from the props to children with the context's provider. We send this data as an object with value.
+
+```javascript
+import { createContext } from 'react';
+
+export const NavbarContext = createContext();
+
+export const GlobalProvider = (props) => {
+  return (
+    <NavbarContext.Provider value={{ id: 2, user: 'Onur' }}>
+      {props.children}
+    </NavbarContext.Provider>
+  );
+};
+```
+In order to use our components, we define GlobalProvider in our App.js file. and in between we define Navlinks and Navbar. So we can use our user, id number and links.
+
+```javascript
+import './App.css';
+import Navbar from './components/Navbar';
+import NavLinks from './components/NavLinks';
+import { GlobalProvider } from './Context/NavContext';
+
+function App() {
+  return (
+    <div className="App">
+      <GlobalProvider>
+        <NavLinks />
+        <Navbar />
+      </GlobalProvider>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<img className="w-full" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1693668947/lcd1qaboiqydxrqcrm8a.jpg" alt="onurtaskiran" />

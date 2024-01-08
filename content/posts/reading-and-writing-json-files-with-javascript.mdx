@@ -1,0 +1,160 @@
+---
+title: Reading and Writing JSON Files with Javascript
+description: I will code a simple application that converts string JSON file to object with javascript and displays it 
+date: "2022-02-10T04:55:00"
+---
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671155697/ffjwluhf0a3vy8bvc7ni.jpg" alt="onurtaskiran" />
+
+I will code a simple application that converts string JSON file to object with javascript and displays it in html format. Json file is used for transmitting data between a web application and a server. JSON is widely used in Ajax Web application programming. It has become increasingly popular as an alternative to XML.
+
+First, let's create our JSON file. I'm making the name of my file posts.json and I am entering four pieces of data
+
+
+
+```javascript
+[
+    {
+
+        "postTitle" :  "Javascript",
+        "category" : "Software",
+        "reads" : 120,
+        "status" : true
+    
+    },
+    {
+
+        "postTitle" :  "Asp.Net",
+        "category" : "Software",
+        "reads" : 190,
+        "status" : false
+    
+    },
+    {
+
+        "postTitle" :  "The Wild One",
+        "category" : "Movie",
+        "reads" : 190,
+        "status" : true
+    
+    },
+    {
+
+        "postTitle" :  "MMA",
+        "category" : "Sport",
+        "reads" : 244,
+        "status" : false
+    
+    }
+]
+```
+Now let's create our script.js file. We will access our json file with this code.
+
+```javascript
+rawFile.open('GET','posts.json',true);
+```
+
+We convert our Json file from string to object with the following code.
+
+```javascript
+let posts = JSON.parse(this.responseText)
+rawFile.open('GET','posts.json',true);
+```
+
+We print to html with forEach loop
+
+And with this code we show it in div
+
+```javascript
+document.querySelector ('# posts'). innerHTML = html;
+``` 
+script.js
+
+```javascript
+document.querySelector('#getPost').addEventListener('click',loadPost);
+
+function loadPost(){
+
+    const rawFile  = new XMLHttpRequest();
+    rawFile.open('GET','posts.json',true);
+
+    rawFile.onload = function(){
+        if(this.status === 200){
+
+            let posts = JSON.parse(this.responseText)
+
+            let html =""; 
+            posts.forEach(post => {
+                html+= `              
+                            <div class="col-3">
+                            ${post.postTitle}
+                            </div>
+                            <div class="col-3">
+                            ${post.category}
+                            </div>
+                            <div class="col-3">
+                            ${post.reads}
+                            </div>
+                            <div class="col-3">
+                            ${post.status}
+                            </div>
+                         `;
+            });
+           document.querySelector('#posts').innerHTML = html;
+        }
+    }
+    rawFile.send();
+}
+``` 
+
+Let's create our html code using bootstrap.
+
+```javascript
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+	<link rel="stylesheet" href="style.css">
+	<title></title>
+</head>
+
+<body>
+
+	<div class="container mt-2 bg-dark text-white">
+	
+		<div class="row border border-white">
+			<div class="col-3">
+				Post Title
+			</div>
+			<div class="col-3">
+				Category
+			</div>
+			<div class="col-3">
+				Reads
+			</div>
+			<div class="col-3">
+				Status
+			</div>
+		</div>
+		<div id="posts" class="row">
+
+		</div>
+	<button id="getPost" class="btn btn-secondary btn-lg" >Get Posts</button>	
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<script src="script.js"></script>
+</body>
+
+</html>
+``` 
+The result is as in the image
+<img className="w-4/5" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704624979/eiv7fmarianufwbgpjfq.jpg" alt="onurtaskiran" />
+
+That is all. Bye 😊

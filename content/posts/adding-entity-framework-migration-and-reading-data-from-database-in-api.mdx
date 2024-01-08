@@ -1,0 +1,160 @@
+---
+title: Adding Entity Framework Migration and Reading Data From Database in Api
+description: Hi how are you? I continue from where we left off in the previous post. what we'll do is We will add Entity Framework migration and update
+date: "2022-09-20T05:05:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671158214/fdjaa8fpnoi4uhpnkico.jpg" alt="onurtaskiran" />
+
+Hi how are you? I continue from where we left off in the <a href="/posts/setting-up-entity-framework-and-adding-a-connection-string">previous post.</a> what we'll do is We will add Entity Framework migration and update the database then we will read the data from the Database. So what are we doing?  We check our version and then we need to install the Entity framework tool.
+
+```javascript
+dotnet tool list -g
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/x8ue1txhnisjvsc0zsiu.jpg" alt="onurtaskiran" />
+
+```javascript
+dotnet tool install --global dotnet-ef --version 5.0.6
+```
+You'll probably see this blank if you've never installed this tool before. Now it's okay if this tool is ahead of your entity framework version, but if your entity framework version is ahead of the tool then you will get an error and need to update the tool itself.
+
+```javascript
+dotnet tool update --global dotnet-ef --version 5.0.6 
+```
+
+And install this package as well.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/vxqzmt7odhtaawxij12x.jpg" alt="onurtaskiran" />
+
+we need to add the initial migration to create the database.
+
+```javascript
+dotnet ef migrations add InitialCreate -o Data/Migrations
+```
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652373/k55rkli8faac9aoshm7m.jpg" alt="onurtaskiran" />
+
+we can see we have a new folder called migrations.
+
+Here is our migrations file
+
+```javascript
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace API.Data.Migrations
+{
+    public partial class InitialCreate : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Products");
+        }
+    }
+}
+```
+
+We are updating our database.
+
+```javascript
+dotnet ef database update
+```
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652373/rb2dodpg1yrpo8yycdhm.jpg" alt="onurtaskiran" />
+
+inside our API folder is that we now have the database that was created, onurnet.db
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/ahdkhg9u2omec2omaggg.jpg" alt="onurtaskiran" />
+
+
+what we can do now is go and take a look at that database.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/aizfiabt5c24z8vt6ynw.jpg" alt="onurtaskiran" />
+
+
+Click on the table the products table and say new query insert.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652373/q2q15ocszqij74ijxbed.jpg" alt="onurtaskiran" />
+
+
+what we actually want to do is actually add a small amount of data to our products table.
+
+```javascript
+-- SQLite
+INSERT INTO Products (Id, Name)
+VALUES (1, 'Product small'), (2, 'Product middle'), (3, 'Product big');
+```
+
+just say run query
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/ua2yajujmqon0wl9wmys.jpg" alt="onurtaskiran" />
+
+
+if we just go ahead and show table for the products again and click on the table, we can now see that we have these three records
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/g0qdutjlcsfztmesxxbk.jpg" alt="onurtaskiran" />
+
+We create a class called ProductController in our Controllers folder.
+
+```javascript
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using API.Data;
+using API.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProductsController : ControllerBase
+    {
+        private readonly StoreContext _context;
+        public ProductsController(StoreContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Product>>> GetProducts()
+        {
+            var products = await _context.Products.ToListAsync();
+
+            return Ok(products);    
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {
+            return await _context.Products.FindAsync(id);
+        }
+    }
+}
+```
+
+Let's see the result in postman.
+
+All products
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/miusexebhkaxu6htksen.jpg" alt="onurtaskiran" />
+
+Single product
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704652374/zh7x2e4enk0y5dbwnt2w.jpg" alt="onurtaskiran" />

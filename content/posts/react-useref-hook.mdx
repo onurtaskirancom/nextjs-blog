@@ -1,0 +1,81 @@
+---
+title: React UseRef Hook
+description: Usually used to directly access a DOM element. We can make changes like we do in Valillajs. We can also be used to store a mutable value that does not cause rework when Updated.
+date: "2023-08-08T01:15:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1691446553/gxkx5odz1ftkakonxqpp.jpg" alt="onurtaskiran" />
+
+Usually used to directly access a DOM element. We can make changes like we do in Valillajs. We can also be used to store a mutable value that does not cause rework when Updated. that is, changes made to the current value of UseRef will not re-render.
+
+UseState triggers the component to be rendered again, but UseRef does not trigger the component to be rendered again. so you can use use useRef according to the project you are working on. although it is not used in every project, it has a very special use in some places.
+
+We include it on our page as a priority.
+
+```javascript
+import React, { useRef } from 'react';
+```
+We declare a ref object whose initial value is null.
+
+```javascript
+const inputRef = useRef(null);
+```
+Example:
+
+When we click the button, our function will run and the focus function of the element we assigned to the inputRef will be called.
+
+```javascript
+import { useRef } from 'react';
+
+const UseRefBasics = () => {
+  const inputRef = useRef(null);
+
+  const handleClick = () => {
+    inputRef.current.focus();
+  };
+
+  return (
+    <>
+      <input ref={inputRef} />
+      <button onClick={handleClick}>Focus the input</button>
+    </>
+  );
+};
+export default UseRefBasics;
+```
+This way we use it to access the elements in the Dom.
+
+Initial Render
+
+Again, this is probably not something you'll use in every project, but it's essentially a nifty solution here where you can avoid running some functions after the initial render.
+
+```javascript
+import { useEffect, useRef, useState } from 'react';
+
+const UseRefBasics = () => {
+  const [value, setValue] = useState(0);
+  const renders = useRef(false);
+
+  useEffect(()=>{
+        if (!renders.current) {
+          renders.current = true;
+          return;
+        }
+         console.log('re-render');
+  },[value])
+
+
+  return (
+    <div>
+      <h1>value : {value}</h1>
+      <button onClick={() => setValue(value + 1)}>
+        increase
+      </button>
+    </div>
+  );
+};
+
+export default UseRefBasics;
+```
+
+So essentially what we do is avoid running any functions after the initial render..

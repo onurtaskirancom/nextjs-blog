@@ -1,0 +1,169 @@
+---
+title: How to Use Async & Await in JavaScript
+description: We have two keywords Async and Await. We use async in front of a function declaration or function expression. The async keyword is used to define 
+date: "2023-04-20T19:27:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1682008054/o7eslkryyzknafyamsk0.jpg" alt="onurtaskiran" />
+
+We have two keywords Async and Await. We use async in front of a function declaration or function expression. The async keyword is used to define a particular function as an asynchronous function. When we put the Async keyword at the beginning of our function, we get a promise. We can now do anything we want inside this function, but since we use the word async to define this function, we have access to a new await keyword. We use the await keyword inside an async function and while waiting for a promise to resolve, we can stop the function from executing, so we can wait for something and then run the code after an asynchronous operation without needing anything with callbacks. that is, we are telling at which points of our code to act asynchronously.
+
+Asynchronous functions are largely based on promises and are built on top of promises. If you don't know about promises in Javascript, I recommend you to review the promise post. You can come back here later. The benefit of async await is that it makes the code easier to read. With async await, the goal is to make the code appear synchronous. Code that is asynchronous appears synchronous.
+
+example:
+
+Let's reach users using the axios library.
+
+```javascript
+function getUsers() {
+  return axios.get('https://jsonplaceholder.typicode.com/users');
+}
+
+getUsers().then((resp) => {
+  console.log(resp);
+});
+```
+```javascript
+output: 
+{data: Array(10), status: 200, statusText: '', headers: i, config: {…}, …}
+```
+
+we get the data and return a promise.
+
+An easier way is to use an asynchronous function.
+
+```javascript
+async function getUsers() {
+  const resp = await axios.get('https://jsonplaceholder.typicode.com/users');
+  console.log(resp);
+}
+
+getUsers(); 
+```
+```javascript
+output: 
+{data: Array(10), status: 200, statusText: '', headers: i, config: {…}, …}
+```
+
+We have our word and our users. Nothing different from what we promised. but we have code that looks nice and step-by-step synchronized. And the craziest part here is await axios.get and we save the value that the promise is resolved to in a variable.
+
+So if there is an error in this structure, how will we catch it? We can't just use catch here. we enclose our code in try catches.
+
+```javascript
+async function getUsers() {
+  try {
+    const resp = await axios.get('https://jsonplaceholder.typicode.com/users');
+    console.log(resp);
+  } catch (e) {
+    console.log('Error Catch!', e);
+  }
+}
+getUsers();
+```
+```javascript
+output: 
+{data: Array(10), status: 200, statusText: '', headers: i, config: {…}, …}
+```
+
+If an error occurs, we catch the error and print the catch statement to the console.
+
+So let's do a bigger example now.
+
+We will fetch the courses of the user we named as username and we want to list the images in this post
+
+```javascript
+ const getUser = (username) => {
+  console.log(`${username} user information`);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({ name: 'john', username: username });
+    }, 2000);
+  });
+};
+
+const getPost = (username) => {
+  console.log(`${username} 's posts.`);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(['post 1', 'post 2', 'post 3']);
+    }, 1000);
+  });
+};
+
+const getImage = (imageName) => {
+  console.log(` Pictures of the post named ${imageName}`);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject('Failed to fetch images error');
+      resolve(['image 1', 'image 2', 'image 3']);
+    }, 2000);
+  });
+};
+
+
+getUser('johncash')
+  .then((user) => getPost(user.name))
+  .then((posts) => getImage(posts[1]))
+  .then((details) => console.log(details))
+  .catch((err) => console.log(err));
+```
+```javascript
+output:
+johncash user information
+john 's posts.
+Pictures of the post named post 2
+(3) ['image 1', 'image 2', 'image 3']
+```
+
+Now let's do our example with Async & Await.
+```javascript
+const getUser = (username) => {
+  console.log(`${username} user information`);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({ name: 'john', username: username });
+    }, 2000);
+  });
+};
+
+const getPost = (username) => {
+  console.log(`${username} 's posts.`);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(['post 1', 'post 2', 'post 3']);
+    }, 1000);
+  });
+};
+
+const getImage = (imageName) => {
+  console.log(` Pictures of the post named ${imageName}`);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // reject('Failed to fetch images error');
+      resolve(['image 1', 'image 2', 'image 3']);
+    }, 2000);
+  });
+};
+
+async function displayUser() {
+  try {
+    const user = await getUser('johncash', '12345');
+    const posts = await getPost(user.name);
+    const details = await getImage(posts[1]);
+    console.log(details);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+displayUser();
+```
+```javascript
+output:
+johncash user information
+john 's posts.
+Pictures of the post named post 2
+(3) ['image 1', 'image 2', 'image 3']
+```
+
+That is all. Happy coding. Good luck everyone

@@ -1,0 +1,72 @@
+---
+title: JavaScript Array Reduce
+description: It is used to reduce the array to a single value and does not change the original array. We can do everything we do with map, filter, find with this structure. 
+date: "2022-12-06T08:22:20"
+---
+
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671168125/ec9ukf5ynr9reshgnyn7.jpg" alt="onurtaskiran" />
+
+It is used to reduce the array to a single value and does not change the original array. We can do everything we do with map, filter, find with this structure. The easiest example to understand is to return the sum of all elements in an array with reduce. First, let's find the sum of the elements of this array using the classical method.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+function result() {
+    let total = 0;
+    for (let i = 0; i < numbers.length; i++){
+        total = total + numbers[i];
+    }
+    console.log(total);
+}
+
+result();
+```
+
+```Output: 15```
+
+Now let's do it with reduce.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+const result = numbers.reduce(function (total, curr, index) {
+    return total = total + curr;
+}, 0);
+
+console.log(result);
+```
+
+```Output: 15```
+
+We multiply the elements of the array by two with map.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+const newResult = numbers.map(function (number) {
+    return number * 2;
+});
+
+console.log(newResult);
+```
+
+```Output: [2, 4, 6, 8, 10]```
+
+We can do this same structure with reduce.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+const newResultwithReduce = numbers.reduce(function (PreviousStatus, currentNumber) {
+    PreviousStatus.push(currentNumber*2);PreviousStatus
+    return PreviousStatus;
+}, []);
+
+console.log(newResultwithReduce);
+```
+
+```Output: [2, 4, 6, 8, 10]```
+
+Initial value must be an empty array. then we got the current number multiplied by two with push.
+normally push returns the new element count after adding an element. Here we are coding it to send an array back. so the point here is to send a string back, not a number.

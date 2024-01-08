@@ -1,0 +1,171 @@
+---
+title: Setting up Entity Framework and Adding a Connection String
+description: Let's create our project from powershell screen with dotnet cli commands. I click Start, type PowerShell, and then click Windows PowerShell.
+date: "2022-09-18T05:07:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671157729/gw2wtfbdlzb0iloucnpf.jpg" alt="onurtaskiran" />
+
+Hello we created a web api project with asp.net core in the<a href="/posts/creating-web-api-project-with-asp.net-core"> previous post.</a>  Now We'll Install Entity Framework and Add a Connection String. I'll use SQLite  as the database. And what we want to do is install this version of Microsoft entity framework core. I'm creating a new class called store context and I have to derive it from dbcontext object. 
+
+We create a Data folder inside the API folder and create our StoreContext class inside the data folder.
+
+It won't find dbcontext and we need to add entity framework as a package to our application. And to do this, we need to go to new get package manager.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650321/dmd94dhl04jhqd1bkuxn.jpg" alt="onurtaskiran" />
+
+I open the terminal. and dotnet dash dash info. I'm typing the command.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650320/rdobjplp6lpbqnnfrwnx.jpg" alt="onurtaskiran" />
+
+In the package manager we search for microsoft.entityframeworkcore.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650322/kghyljca2th8bm6kuwmw.jpg" alt="onurtaskiran" />
+
+Now I'm using the five point zero point four version and it is a good idea to match it with the entity framework version you are using. You don't have to be on the same version of me.
+
+Make sure you choose the one that is closest or as close as possible to the version you are using.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650320/ya0wgxeb0g5iqhzruwce.jpg" alt="onurtaskiran" />
+
+We run the dotnet restore command.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650321/nq5fba8hv8n9c2xnbukb.jpg" alt="onurtaskiran" />
+
+Press ctrl and point and choose to using Microsoft.EntityFrameworkcore.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650321/nzgv2kszdmf3xtwxepsc.jpg" alt="onurtaskiran" />
+
+then I hover over StoreContext and select Generate constructor 'StoreContext(options)'.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650321/vi5xriuojttv7hsrjndh.jpg" alt="onurtaskiran" />
+
+We hover over Product and select using API.Entities;
+
+We specify our database in appsettings.Development.json.
+
+```javascript
+  "ConnectionStrings": {
+    "DefaultConnection": "Data source=onurnet.db"
+  }
+  
+```
+
+This needs to be spelled exactly as it is here.
+
+
+```javascript
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Data source=onurnet.db"
+  }
+}
+
+```
+And then what we need to do is we need to go to our start of class and we need to add our data context or our store context.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650321/y3bg28d6hmyhe4vd3phh.jpg" alt="onurtaskiran" />
+
+We select API.Data
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704650322/lmzav6qlnjlnhq9woaks.jpg" alt="onurtaskiran" />
+
+we add our code.
+
+```javascript
+services.AddDbContext<StoreContext>(x => 
+                x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+```
+
+Result:
+
+```javascript
+public void ConfigureServices(IServiceCollection services)
+        {
+
+            services.AddControllers();
+            services.AddDbContext<StoreContext>(x => 
+                x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+                
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+            });
+        }
+```
+
+All of Startup.cs
+
+```javascript
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using API.Data;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+
+namespace API
+{
+    public class Startup
+    {
+        private readonly IConfiguration _config;
+        public Startup(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+
+            services.AddControllers();
+            services.AddDbContext<StoreContext>(x => 
+                x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+                
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+            });
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
+    }
+}
+```
+

@@ -1,0 +1,80 @@
+---
+title: React useEffect Hooks
+description: When it comes to using effects hook in React it allows us to perform side effect in function component. UseEffect lets you perform data fetching 
+date: "2023-06-02T06:09:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1691440008/yqcd90pl1fdgpoxn4all.png" alt="onurtaskiran" />
+
+When it comes to using effects hook in React it allows us to perform side effect in function component. UseEffect lets you perform data fetching, updating the DOM directly, timers, and side effects such as state or variable changes in your components. useEffect is one of the most used hooks in react applications. By default, it runs after every render. On the first render and every re-render. So let's see how to use it. I mentioned useState in a previous post. If you haven't read that article, I suggest you read that article before reading this topic.
+
+The first thing we're going to do is import the Hook.
+
+```javascript
+import React, { useEffect } from 'react';
+```
+We need to add useEffect to the top level of the function component.
+
+```javascript
+  useEffect(()=>{
+    console.log('hello from useEffect');    
+  })
+```
+  In this example, Hook will run after each commit.
+```javascript
+  useEffect(()=>{
+    console.log('hello from useEffect');    
+  }, [])
+```
+When we add the array it will look at this array and when the elements inside this array change it will run the content. It will only run once as we are adding an empty array. so useEffect will work when the first component is loaded and will not work again.
+
+```javascript
+  useEffect(()=>{
+    console.log('hello from useEffect');    
+  }, [counter])
+```
+It will run every time it changes the value of the counter variable.
+
+```javascript
+  useEffect(()=>{
+    console.log('hello from useEffect');    
+  }, [counter, counter1, counter2])
+```
+If we want it to work after multiple variable changes, we can write it like this.
+
+Effect Cleanup
+
+If we have some kind of functionality that could possibly cause a problem. That's when we need to go back and set the cleanup function. We do this by adding a return function to the end of the useEffect Hook. Note that you won't need to set up cleanup functionality for every user effect.
+
+```javascript
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCount(count + 1); // This effect depends on the `count` state
+    }, 1000);
+    return () => clearInterval(id);
+  }, []); // Bug: `count` is not specified as a dependency
+
+  return <h1>{count}</h1>;
+}
+```
+
+Changing dependencies too often can lead to bugs. In order not to get an error, we need to enter setCount as a function. If you're returning something, React actually expects you to return a function. that is, we enter the change we want to make as a callback function.
+
+```javascript
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCount(c => c + 1); // This doesn't depend on `count` variable outside
+    }, 1000);
+    return () => clearInterval(id);
+  }, []); // Our effect doesn't use any variables in the component scope
+
+  return <h1>{count}</h1>;
+}
+```
+Happy coding. Good luck everyone.

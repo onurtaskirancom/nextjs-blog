@@ -1,0 +1,579 @@
+---
+title: How to Use Flexbox in CSS
+description: Why is Flexbox used? It allows us to design our website much more easily and effectively. With Flexbox, we can easily spread the width, height and order of the html elements to the field.
+date: "2022-12-31T08:05:04"
+---
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672452264/o213g9ngvkuuvrbzmrn7.jpg" />
+
+Why is Flexbox used? It allows us to design our website much more easily and effectively. With Flexbox, we can easily spread the width, height and order of the html elements to the field. Flexbox does this automatically for us without any overflow. Also, we can direct our items as we want. We can apply properties such as float, position, that we use in classical css very simply with flexbox. what we need to do is display: flex; write our code
+
+```javascript
+flex-direction 
+```
+
+We can list the items listed side by side one under the other
+
+```javascript
+justify-content
+```
+
+We can sort our items horizontally. We can give a certain distance between the elements and bring them to the beginning and the end.
+
+```javascript
+flex-wrap
+```
+
+when the screen width gets smaller our items go to the bottom
+
+```javascript
+align-items
+```
+
+We can align vertically.
+
+```javascript
+align-content
+```
+
+we can adjust the distance between each row.
+
+```javascript
+align-self
+```
+
+We can move each element individually.
+
+```javascript
+order
+```
+
+we can sort
+
+```javascript
+flex-grow:0 
+```
+
+We can adjust how much our items grow when containers grow.
+
+```javascript
+flex-shrink:1
+```
+
+We can adjust how much our items shrink when containers shrink.
+
+we can initially give width attribute to each element.
+
+Let's create the containers and items of our web page.
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox</title>
+</head>
+<style>
+    .container {
+       background-color: rgb(148, 158, 161);
+       border: 1px solid rgb(95, 174, 248);
+       padding: 20px;
+       
+    }
+
+    .item {
+        background-color: rgb(78, 78, 78);
+        padding: 40px;
+        color: #fff;
+        min-height: 100px;
+        font-size: 35px;
+        border: 1px solid black;
+        margin:10px;
+    }
+
+    .item1 {
+
+    }
+
+    .item2 {
+
+    }
+
+    .item3 {
+
+    }
+   
+
+</style>
+
+<body>
+    <div class="container">
+        <div class="item item1">item 1</div>
+        <div class="item item2">item 2</div>
+        <div class="item item3">item 3</div>
+        
+    </div>
+</body>
+
+</html>
+```
+
+output picture
+<img className="w-full" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672449113/jlcljcr8f2or11hlbsg2.jpg" />
+
+Now let's add display to our code
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox</title>
+</head>
+<style>
+    .container {
+       background-color: rgb(148, 158, 161);
+       border: 1px solid rgb(95, 174, 248);
+       padding: 20px;
+       display: flex;
+    }
+
+    .item {
+        background-color: rgb(78, 78, 78);
+        padding: 40px;
+        color: #fff;
+        min-height: 100px;
+        font-size: 35px;
+        border: 1px solid black;
+        margin:10px;
+    }
+
+    .item1 {
+
+    }
+
+    .item2 {
+
+    }
+
+    .item3 {
+
+    }
+   
+
+</style>
+
+<body>
+    <div class="container">
+        <div class="item item1">item 1</div>
+        <div class="item item2">item 2</div>
+        <div class="item item3">item 3</div>
+        
+    </div>
+</body>
+
+</html>
+```
+
+output
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672449113/ejtoanify4jcyzwyyrnr.jpg" />
+As you can see, our items came side by side. Now we can move it however we want.
+
+```javascript
+.container {
+       background-color: rgb(148, 158, 161);
+       border: 1px solid rgb(95, 174, 248);
+       padding: 20px;
+       display: flex;
+       flex-direction: row-reverse;
+    }
+```
+
+I added row-reverse and it aligns in reverse.
+
+Now let's add flex-wrap.
+
+```javascript
+    .container {
+       background-color: rgb(148, 158, 161);
+       border: 1px solid rgb(95, 174, 248);
+       padding: 20px;
+       display: flex;
+       flex-direction: row-reverse;
+       flex-wrap: wrap;
+    }
+```
+output
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672449113/svvvfakt0s4vbhirpa0c.jpg" />
+As you can see, my items went to the bottom. Items that do not fit according to the screen shrinkage will be lowered.
+
+```javascript
+.container {
+       background-color: rgb(148, 158, 161);
+       border: 1px solid rgb(95, 174, 248);
+       padding: 20px;
+       display: flex;
+       flex-direction: row-reverse;
+       flex-wrap: wrap;
+       justify-content: center;
+    }
+```
+output
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672449114/f3ajjx1kssuyr0tbqosm.jpg" />
+By adding justify-content we have centered our elements as you can see. When the screen shrinks, the spaces from right to left will be equalized.
+
+We can add flex-grow command to our items and make various settings.
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox</title>
+</head>
+<style>
+    .container {
+       background-color: rgb(148, 158, 161);
+       border: 1px solid rgb(95, 174, 248);
+       padding: 20px;
+       display: flex;
+       flex-direction: row-reverse;
+       flex-wrap: wrap;
+       justify-content: center;
+    }
+
+    .item {
+        background-color: rgb(78, 78, 78);
+        padding: 40px;
+        color: #fff;
+        min-height: 100px;
+        min-width: 300px;
+        font-size: 35px;
+        border: 1px solid black;
+        margin:10px;
+    }
+
+    .item1 {
+        flex-grow: 0;
+    }
+
+    .item2 {
+        flex-grow: 1;
+    }
+
+    .item3 {
+        flex-grow: 0;
+    }
+
+    .item4 {
+        flex-grow: 0;
+    }
+
+    .item5 {
+        flex-grow: 0;
+    }
+   
+
+</style>
+
+<body>
+    <div class="container">
+        <div class="item item1">item 1</div>
+        <div class="item item2">item 2</div>
+        <div class="item item3">item 3</div>
+        <div class="item item4">item 4</div>
+        <div class="item item5">item 5</div>
+        
+    </div>
+</body>
+
+</html>
+```
+
+output
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672449114/sceiaoqusdb0elbsmfbb.jpg" />
+We can specify the order of our items by giving the order value.
+
+```javascript
+.item1 {
+        flex-grow: 0;
+        order: 3;
+    }
+
+    .item2 {
+        flex-grow: 1;
+        order: 1;
+    }
+
+    .item3 {
+        flex-grow: 0;
+        order: -2;
+    }
+
+    .item4 {
+        flex-grow: 0;
+        order: -1;
+    }
+
+    .item5 {
+        flex-grow: 0;
+        order: 2;
+    }
+```
+I built a simple website using flexbox.
+
+my html codes
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Flexbox Web Site</title>
+  </head>
+  <body>
+    <div class="header">
+    <div class="slogan">Welcome My Web Site</div>
+      <nav class="menu">
+        <ul class="links">
+          <li class="link"><a href="#home">Home</a></li>
+          <li class="link"><a href="#news">News</a></li>
+          <li class="link"><a href="#contact">Contact</a></li>
+          <li class="link"><a href="#about">About</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="m-container">
+      <div class="m-item">
+        <h2>My Web Site Post 1</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. In molestias
+          libero obcaecati eius architecto sapiente blanditiis? Natus sed odio
+          totam mollitia vero maxime error, quod, eaque dolor officia harum
+          itaque.Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum
+          distinctio commodi eos consequatur quo voluptate, qui nesciunt vitae
+          nihil ullam?
+        </p>
+      </div>
+      <div class="m-item">
+        <h2>This is My Web Site Post 2</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum
+          distinctio commodi eos consequatur quo voluptate, qui nesciunt vitae
+          nihil ullam?Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum
+          distinctio commodi eos consequatur quo voluptate, qui nesciunt vitae
+          nihil ullam?
+        </p>
+      </div>
+      <div class="latest">
+        <h2>Posts</h2>
+        <a href="#"><h3>commodi eos consequatur quo voluptate, qui nesciunt vitae</h3></a>
+        <a href="#"><h3>commodi eos consequatur quo voluptate, qui nesciunt vitae</h3></a>
+        <a href="#"><h3>commodi eos consequatur quo voluptate, qui nesciunt vitae</h3></a>
+        <a href="#"><h3>commodi eos consequatur quo voluptate, qui nesciunt vitae</h3></a>
+
+      </div>
+
+      
+    </main>
+
+    <div class="subscribe">
+      <h2>subscribe 👇</h2>
+      <form action="#" class="form">
+        <input type="text" placeholder="Email" />
+        <button>Submit</button>
+      </form>
+    </div>
+  </body>
+</html>
+```
+
+output
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672449114/k8x3r3bytoiqzgym5bo2.jpg" />
+mobile output
+<img className="w-3/12 mx-2" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1672449114/fg0eoic1coihfpnz3pzg.jpg" alt="onurtaskiran" />
+
+
+my css codes
+```javascript
+*{
+    font-family: 'arial', arial, helvetica;
+}
+
+
+body{
+    margin: 0;
+    padding: 0;
+    font-size:28px;
+}
+
+h3 {
+    font-size: 15px;
+    text-decoration:none;
+
+}
+a{
+    text-decoration:none;
+}
+
+.header{
+    background-color: #1897ff;
+    color: #fff;
+    padding:0 .5rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+}
+
+.menu{
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow:-1;
+}
+
+.menu ul{
+    list-style:none;
+    display:flex;
+   
+}
+
+.menu ul li{
+    flex-grow: 1;
+
+}
+
+.menu ul li a{
+    font-size:1.2rem;
+
+}
+
+.links{
+    margin:0;
+    list-style:none;
+    display:flex;
+    flex-wrap: wrap;
+}
+
+.link{
+    padding:.5rem;
+}
+.link:hover{
+    background-color: #777;
+}
+
+.link a{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+.m-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    padding-left: 25px;
+    padding-right: 25px;
+  
+}
+
+.m-item{
+    padding:2%;
+    text-align: center;
+    flex:1;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+.m-item h2{
+    color: #1897ff;
+}
+.m-item p{
+    margin-top: 5px;
+}
+
+.latest{
+    padding: 1rem;
+    text-align: left;
+    align-self: stretch;
+    justify-content: center;
+    flex-basis: 200px;   
+    flex-shrink: 0; 
+    background-color: #1897ff;
+}
+
+.subscribe{
+
+    margin: 1rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: #777;
+    border-radius: 30px;
+    flex-direction: column; 
+}
+.subscribe h2{
+    text-align: center;
+    padding:1rem;
+    font-size: 2rem;
+    color:#1897ff;
+}
+
+.form{
+    padding:3rem;
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    width:40%;
+    margin:auto;
+}
+
+.form input, .form textarea{
+    padding:1rem;
+    width:100%;
+    outline:none;
+    border:1px solid  #1897ff;
+    border-radius: .3rem;
+}
+.form button{
+    background-color:#1897ff;
+    padding:1rem;
+    margin-top:1rem;
+    color:white;
+    width:30%;
+    border:none;
+    font-size:1.2rem;
+}
+
+
+@media all and (max-width:600px){
+    .header{
+        flex-direction: column;
+        text-align: center;
+    }
+    .latest{
+        flex-direction: column;
+        align-self: stretch;
+        justify-content: center;
+        flex-basis: 300px;   
+        flex-shrink: 0; 
+    }
+    .menu ul{
+        flex-direction: column;
+        padding-top:1rem;
+    }
+    .main-content {
+        flex-direction: column;
+        padding:2%
+    }
+}
+```

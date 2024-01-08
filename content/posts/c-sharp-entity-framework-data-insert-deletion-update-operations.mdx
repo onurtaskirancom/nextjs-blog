@@ -1,0 +1,234 @@
+---
+title: C Sharp Entity Framework Data Insert Deletion Update Operations
+description: Entity Framework is an object-relational mapper (O/RM) that enables .NET developers to work with a database
+date: "2022-01-30T04:31:00"
+---
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671154306/ycftzm6obd0hnagtoies.jpg" alt="onurtaskiran" />
+
+Entity Framework is an object-relational mapper (O/RM) that enables .NET developers to work with a database using .NET objects. It eliminates the need for most of the data-access code that developers usually need to write.” Entity Framework is an open-source ORM framework for .NET applications supported by Microsoft. Architects and developers of data-oriented applications have typically struggled with the need to achieve two very different objectives.
+
+Create one Window form application
+
+Create the form as below.
+<img className="w-4/5" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704618399/qdvsrtpqgpffzlwtu08i.jpg" alt="onurtaskiran" />
+
+Let's create our product object
+
+Product.cs
+```javascript
+namespace EntityFrameworkExample
+{
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal UnitPrice { get; set; }
+        public int StockAmount { get; set; }
+    }
+}
+```
+Now, in this step, we will install entity framework. So, go to nuget package manager and then install theentity framework as you do see below in the screenshot.
+<img className="w-4/5" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704618400/zyqppasaoww0ynyy96ww.jpg" alt="onurtaskiran" />
+
+Create the CompanyContext class as follows
+
+CompanyContext.cs
+
+```javascript
+using System.Data.Entity;
+
+namespace EntityFrameworkExample
+{
+    public class CompanyContext : DbContext
+    {
+        public DbSet<Product> Products { get; set; }
+    }
+}
+```
+Form1.cs
+```javascript
+using System;
+using System.Windows.Forms;
+
+namespace EntityFrameworkExample
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void dgwProducts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        ProductCon _productCon=new ProductCon();
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadProducts();
+        }
+
+        private void LoadProducts()
+        {
+            dgwProducts.DataSource = _productCon.GetAll();
+        }
+
+        private void SearchProducts(string key)
+        {
+           // var result = _productCon.GetAll().Where(p => p.Name.Contains(key)).ToList();
+           var result = _productCon.GetByName(key);
+            dgwProducts.DataSource = result;
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            _productCon.Add(new Product
+            {
+                Name = tbxName.Text,
+                UnitPrice = Convert.ToDecimal(tbxUnitPrice.Text),
+                StockAmount = Convert.ToInt32(tbxStockAmount.Text)
+            });
+            LoadProducts();
+            MessageBox.Show("Added!");
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            _productCon.Update(new Product
+            {
+                Id = Convert.ToInt32(dgwProducts.CurrentRow.Cells[0].Value),
+                Name = tbxNameUpdate.Text,
+                UnitPrice = Convert.ToDecimal(tbxUnitPriceUpdate.Text),
+                StockAmount = Convert.ToInt32(tbxStockAmountUpdate.Text)
+            });
+            LoadProducts();
+            MessageBox.Show("Updated");
+        }
+
+       
+
+
+        private void btnAdd_Click_1(object sender, EventArgs e)
+        {
+            _productCon.Add(new Product
+            {
+                Name = tbxName.Text,
+                UnitPrice = Convert.ToDecimal(tbxUnitPrice.Text),
+                StockAmount = Convert.ToInt32(tbxStockAmount.Text)
+            });
+            LoadProducts();
+            MessageBox.Show("Added!");
+        }
+
+        private void tbxSearch_TextChanged_1(object sender, EventArgs e)
+        {
+            SearchProducts(tbxSearch.Text);
+        }
+
+        private void btnRemove_Click_1(object sender, EventArgs e)
+        {
+            _productCon.Delete(new Product
+            {
+                Id = Convert.ToInt32(dgwProducts.CurrentRow.Cells[0].Value)
+            });
+            LoadProducts();
+            MessageBox.Show("Deleted!");
+        }
+
+        private void dgwProducts_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            tbxNameUpdate.Text = dgwProducts.CurrentRow.Cells[1].Value.ToString();
+            tbxUnitPriceUpdate.Text = dgwProducts.CurrentRow.Cells[2].Value.ToString();
+            tbxStockAmountUpdate.Text = dgwProducts.CurrentRow.Cells[3].Value.ToString();
+        }
+
+ 
+    }
+}
+```
+ProductCon.cs
+```javascript
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+
+namespace EntityFrameworkExample
+{
+    class ProductCon
+    {
+        public List<Product> GetAll()
+        {
+            using (CompanyContext context = new CompanyContext())
+            {
+                return context.Products.ToList();
+            }
+        }
+
+        public List<Product> GetByName(string key)
+        {
+            using (CompanyContext context = new CompanyContext())
+            {
+                return context.Products.Where(p => p.Name.Contains(key)).ToList();
+            }
+        }
+
+        public void Add(Product product)
+        {
+            using (CompanyContext context = new CompanyContext())
+            {
+                // context.Products.Add(product);
+                var entity = context.Entry(product);
+                entity.State = EntityState.Added;
+                context.SaveChanges();
+            }
+        }
+
+        public void Update(Product product)
+        {
+            using (CompanyContext context = new CompanyContext())
+            {
+                var entity = context.Entry(product);
+                entity.State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public void Delete(Product product)
+        {
+            using (CompanyContext context = new CompanyContext())
+            {
+                var entity = context.Entry(product);
+                entity.State = EntityState.Deleted;
+                context.SaveChanges();
+            }
+        }
+    }
+}
+ 
+```
+App.config
+```javascript
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+  <section name="entityFramework"
+    type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+    requirePermission="false"/>
+  </configSections>
+  <connectionStrings>
+    <add name="CompanyContext" connectionString="server=(localdb)\mssqllocaldb;initial catalog=Company;integrated security=true"
+      providerName="System.Data.SqlClient"/>
+
+  </connectionStrings>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2"/>
+  </startup>
+  <entityFramework>
+    <providers>
+      <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer"/>
+    </providers>
+  </entityFramework>
+</configuration>
+```

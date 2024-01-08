@@ -1,0 +1,154 @@
+---
+title: What is a Promise in JavaScript?
+description: Promise is easier to write and implement than callbacks. A promise is simply an object that represents the completion or failure of a process.
+date: "2023-04-14T18:54:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1681487643/phqkiydvgwywu4kbagi5.jpg" alt="onurtaskiran" />
+
+Promise is easier to write and implement than callbacks. A promise is simply an object that represents the completion or failure of a process. It's usually something that takes time.  When we use a library like Axios we return a promise and when we request data from api this process may take time and this value may never come back, it may succeed or fail. You can get some data back from API, So at this time the returned object is a promise. most libraries support promises. For example, we can use promise in a library like axios.
+
+JavaScript promises are a programming language feature used for asynchronous programming. They provide a cleaner and more readable way to handle asynchronous operations compared to traditional callback functions. Promises were introduced in ECMAScript 2015 (ES6) and have become a fundamental part of modern JavaScript development.
+
+A simple example of a promise:
+
+```javascript
+const promise = new Promise((resolve, reject) =>{
+  if (true) {
+    resolve('program worked');
+  } else {
+    reject('Error...');
+  }
+})
+
+promise
+.then(result => console.log(result))
+.catch(err => console.log(err));
+```
+```javascript
+output: program worked
+```
+
+when we create a promise we pass a function. This function has two parameters. we usually call these two parameters resolve and reject. And these are actually functions. If we call resolve, the promise will be resolved. If we call reject, the promise will be rejected. If we do not reject or resolve a promise, its value or status will be pending. The first time an promise is returned, the first thing you will see is usually the pending status of an promise.
+
+Every promise has a then method, if our promise is resolved it will work. This code runs and writes to console when this promise is resolved. we use another method, xxxx, to catch errors.
+
+```javascript
+const getProduct = new Promise((resolve, reject) => {
+  	const amount = 0;
+  if (amount > 0) {
+    resolve();
+  } else {
+    reject();
+  }
+});
+getProduct.then(() => {
+  console.log('WE HAVE PRODUCT!!!');
+});
+getProduct.catch(() => {
+  console.log('NO PRODUCT');
+});
+```
+```javascript
+output: NO PRODUCT
+```
+
+In our example above we caught the error using catch.
+
+No matter what we pass into the then method, it will run automatically when a given promise is resolved, and whatever we pass into the catch method, the catch method will automatically run when a promise is rejected. We meet the incoming data with then and catch the error with catch.
+
+Sometimes we can use promise in one line according to our needs. We can be used without creating ```(new Promise())```
+
+```javascript
+  const promise = Promise.resolve();
+  const promiseErr = Promise.reject();
+
+  promise.then(() => console.log('successful'));
+
+  promiseErr.catch(() => console.log('Error...'));
+ ```
+Consuming a Promise:
+You can consume a promise using the then and catch methods. The then method is called when the promise is fulfilled, and the catch method is called when it is rejected.
+
+```javascript
+myPromise
+    .then((result) => {
+        // Handle the successful result
+    })
+    .catch((error) => {
+        // Handle the error
+    });
+```
+Chaining Promises:
+Promises can be chained together using multiple then calls, allowing you to perform a series of asynchronous operations in a more readable and sequential manner.
+
+```javascript
+myPromise
+    .then((result) => {
+        // Do something with the result
+        return anotherAsyncOperation(result);
+    })
+    .then((resultOfAnotherOperation) => {
+        // Handle the result of the second operation
+    })
+    .catch((error) => {
+        // Handle errors from any step in the chain
+    });
+```
+Promise.all()
+
+We enter the expected promises as an array and then it gives us the rendered results in a single array. Let's examine our example.
+
+```javascript
+const promise1 = new Promise((resolve, reject)=>{
+    setTimeout(resolve, 1000, 'Blue')
+  });
+
+  const promise2 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 6000, 'Green');
+  });
+
+  const promise3 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 3000, 'White');
+  });
+
+Promise.all([promise1, promise2, promise3]).then((values) => {
+  console.log(values);
+});
+```
+```javascript
+output: ['Blue', 'Green', 'White']
+```
+
+It gave us the result of our three promises as an array. the values ​​are returned as an array in the order they were just written. i.e. it waited until all promises were resolved and then their values ​​were output.
+
+Promise.race()
+
+Here, the promise that reaches the fastest result is taken as the value. Success (resolved) or unsuccessful (rejected) result does not affect the result.
+
+```javascript
+  const promise1 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 1000, 'Blue');
+  });
+
+  const promise2 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 6000, 'Green');
+  });
+
+  const promise3 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 3000, 'White');
+  });
+
+
+  Promise.race([promise1, promise2, promise3]).then((values) =>
+    console.log(values)
+  );
+```
+
+```javascript
+output: Blue
+```
+
+The three promises in the example above will race and give us whichever finishes first.
+
+Happy coding.

@@ -1,0 +1,86 @@
+---
+title: Creating Web Api Project With Asp.NET Core
+description: Let's create our project from powershell screen with dotnet cli commands. I click Start, type PowerShell, and then click Windows PowerShell.
+date: "2022-09-17T10:21:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671157310/jek4j6etb7ds4imcnqu3.jpg" alt="onurtaskiran" />
+
+Let's create our project from powershell screen with dotnet cli commands. I click Start, type PowerShell, and then click Windows PowerShell. First of all, I see that my file is empty with the ls command. I am creating my onurnet folder with the mkdir onurnet command and then I go into my file with the cd onurnet command. 
+
+ <img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647209/bv8iirt44vkvyzbezgmd.jpg" alt="onurtaskiran" />
+
+Now what I'm going to do is check out the help options.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647209/jsfrxvqiu1d0qbftarkv.jpg" alt="onurtaskiran" />
+
+The one we can look at now is the dot net new command, which allows us to create new dot net projects or dot net files.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647209/k2qrjbv9r8nwxyax7gdh.jpg" alt="onurtaskiran" />
+
+And we're also going to create a solution for our project. we use the dotnet new sln command for this.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647205/csfjxevsdjne6j6csllm.jpg" alt="onurtaskiran" />
+
+And this gets created successfully.
+
+We create our api project with dotnet new webapi -o API command.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647207/pvs2ogucqpwcnlyibvyz.jpg" alt="onurtaskiran" />
+
+Yes, our project has been successfully created. now let's go have a look.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647206/hqbvxzne0gbotwsg4rog.jpg" alt="onurtaskiran" />
+
+We go into our API folder.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647207/bbyknvlsccgot6c5cbbw.jpg" alt="onurtaskiran" />
+
+What was the code where we could see all the files? It was the code of ls. We write the code for ls
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647206/xiqdbckwpn1xhrvp8qwh.jpg" alt="onurtaskiran" />
+
+There is no sln in our API folder. I want to be able to run the API alone. When we create more than one project, we may want to run it separately. So I'll add another sln
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647207/iqekeqb7cs2cedm88sif.jpg" alt="onurtaskiran" />
+
+With the dotnet sln -h command, we are looking at auxiliary methods.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647206/k1c7tbqyw28pnidzm27y.jpg" alt="onurtaskiran" />
+
+We add sln with the dotnet sln add API command.
+
+So now what we have is a solution that contains a project. Then we type the dotnet sln list command.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647205/wft4y2mugr3orodrcr1h.jpg" alt="onurtaskiran" />
+
+code . If we type the command, the project will open the code environment for us.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647205/yk3d19e8uejdpisodmjg.jpg" alt="onurtaskiran" />
+
+ Here is the result.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647207/tzxcnxs0nomgcgwoxhde.jpg" alt="onurtaskiran" />
+
+If you want, you can also open the project with visual studio.
+
+We can open our terminal using ctrl and apostrophes, then enter the api file with the cd API command and run the project with the dotnet run command.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647208/kw98znsulvuodvanpp3g.jpg" alt="onurtaskiran" />
+
+And inside our project here, what we're given when we create it is this weather forecast class. We're going to make a request to our API and make sure that our project is working.
+
+We run the postman.
+
+https://localhost:5001/weatherforecast
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647208/dzublek6cvqu3tgowr0k.jpg" alt="onurtaskiran" />
+
+We can view it in our web browser.
+
+<img className="w-full " src="https://res.cloudinary.com/djfqidbj1/image/upload/v1704647208/t7qmqx2sbq0n4p3zf8at.jpg" alt="onurtaskiran" />
+
+that's all for now.
+
+to be continued.
+

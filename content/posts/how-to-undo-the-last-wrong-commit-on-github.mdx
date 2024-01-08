@@ -1,0 +1,33 @@
+---
+title: How to undo the last wrong commit on GitHub?
+description: When we send what we need to send to Github, there is an easy way to get it back. sometimes i can send wrong commit. That's when I immediately delete the commits and post them again. 
+date: "2022-12-16T08:05:46"
+---
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671158794/wtbaeyuvlicovk0ykaky.jpg" />
+
+When we send what we need to send to Github, there is an easy way to get it back. sometimes i can send wrong commit. That's when I immediately delete the commits and post them again. We can undo as many commits as we want from both local and remote repository.
+
+First, let's send the wrong commit
+
+```javascript
+git add .
+git commit -m "false commit"
+git push origin master
+```
+The first code we will write will undo the local repository by one commit
+
+```javascript
+git reset --hard Head~1
+```
+If you want to delete more commits, you can increase the number after Head~.
+
+Now let's undo the commit from github too... This is very simple to do. We just add a plus to the beginning of the master in our git push origin master code.
+
+```javascript
+git push origin +master
+```
+
+When you do this, we are doing a force update. So, we cleared both local and remote repository from the last commit.
+
+Keep coding.
+

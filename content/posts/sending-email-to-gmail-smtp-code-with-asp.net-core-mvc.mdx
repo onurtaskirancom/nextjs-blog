@@ -1,0 +1,108 @@
+---
+title: Sending Email To Gmail SMTP Code with ASP.NET Core MVC
+description: We use the email sending process frequently in any web application. Sending mail with ASP.NET Core MVC is really simple. 
+date: "2022-08-11T04:45:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671155128/ydl8w4zphcwtd3uz05ef.jpg" alt="onurtaskiran" />
+
+We use the email sending process frequently in any web application. Sending mail with ASP.NET Core MVC is really simple. What we need to do is add class to Models folder and add controller to our controllers folder. After writing a few code, our process will be finished.
+
+We add Email class to the models folder.
+
+```javascript
+namespace onurtaskiran.Models
+{
+    public class Email
+    {
+        public string To { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+
+    }
+}
+```
+we use the "System.Net.Mail" namespace. Yes don't forget to add it.
+
+```javascript
+
+using Microsoft.AspNetCore.Mvc;
+using onurtaskiran.Models;
+using System.Net.Mail;
+
+namespace onurtaskiran.Controllers
+{
+    public class MailController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Index(Email em)
+        {
+            string to = em.To;
+            string subject = em.Subject;
+            string body = em.Body;
+            MailMessage mm = new MailMessage();
+            mm.To.Add(to);
+            mm.Subject = subject;
+            mm.Body = body;
+            mm.From = new MailAddress("onurtaskiran@gmail.com");
+            mm.IsBodyHtml = false;
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+            smtp.Port = 587;
+            smtp.UseDefaultCredentials = true;
+            smtp.EnableSsl = true;
+            smtp.Credentials = new System.Net.NetworkCredential("onurtaskiran@gmail.com", "password");
+            smtp.Send(mm);
+            ViewBag.message = "Your email has been sent successfully";
+            return View();
+        }
+    }
+}
+```
+
+Include the HTML page in our project and edit it as in the code
+
+```javascript
+@model onurtaskiran.Models.Email
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}		
+		
+<h4>Email</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="To" class="control-label"></label>
+                <input asp-for="To" class="form-control" />
+                <span asp-validation-for="To" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" class="form-control" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Body" class="control-label"></label>
+                <textarea asp-for="Body" class="form-control" rows="3" cols="15"></textarea>
+                <span asp-validation-for="Body" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Send Email" class="btn btn-default" />
+            </div>
+            <h5>@ViewBag.message</h5>
+        </form>
+    </div>
+</div>
+
+```
+
+You may get gmail security errors. Does not allow your Gmail account to be used by an external application. If you want to send mail, you must disable secure application access.

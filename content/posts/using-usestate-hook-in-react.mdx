@@ -1,0 +1,80 @@
+---
+title: Using useState Hook in React
+description: useState is a React Hook that allows us to access state in function components. State refers to the data or properties that should be tracked in our project.  
+date: "2023-05-03T03:13:20"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1683072822/q7jl3lliiy5wxznpsckr.jpg" alt="onurtaskiran" />
+
+useState is a React Hook that allows us to access state in function components. State refers to the data or properties that should be tracked in our project. useState allows us to use React's state property without writing a class. It has been included in the react library since v16.8 (in 2019). Before it was included in the react library, we had to write a class when we wanted to use state. With useState, we can write state management in our projects with very clean code.
+
+First, we import the useState hook from React.
+```javascript
+import { useState } from 'react';
+```
+Then we make a value definition.
+```javascript
+const [value, setValue] = useState();
+```
+We define setValue in updating a value definition. With useState, we define a state hook. So we can define it this way and we can't put any value in it or we can initialize it with zero. Apart from this, we can define an array, any value as an object.
+
+```javascript
+const [value, setValue] = useState(0);
+```
+useState stores a value for us.
+
+example:
+
+```javascript
+import { useState } from 'react';
+
+const UseStateExample = () => {
+  const [count, setCount] = useState(0);
+  const handleClick = () => {
+    setCount(count + 1);
+  };
+  return (
+    <div>
+      <h4>{count}</h4>
+      <button onClick={handleClick}>increase</button>
+    </div>
+  );
+};
+
+export default UseStateExample;
+```
+
+When we click the button, our value will increase by one. this is how the useState is created with a simple example.
+
+Let's make an example as an Object.
+
+We have our user's name, age and email information. I'm changing the name of our user, whose name is Mike, to Onur.
+
+```javascript
+import { useState } from 'react';
+
+const UseStateObject = () => {
+  const [user, setUser] = useState({
+    name:'Mike',
+    age:24,
+    email:'mike@gmail.com',
+
+  })
+
+  const displayPerson = () => {
+    setUser({...user, name: 'Onur'})
+  };
+  return (
+    <>
+      <h3>{user.name}</h3>
+      <h3>Age: {user.age}</h3>
+      <h3>Email: {user.email}</h3>
+      <button onClick={displayPerson}>
+        show user
+      </button>
+    </>
+  );
+};
+
+export default UseStateObject;
+```

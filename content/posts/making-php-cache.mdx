@@ -1,0 +1,57 @@
+---
+title: Making Php Cache
+description: Websites made without cache can cause speed problems. An event called cache is the caching process. This is very suitable for speeding up your php pages.
+date: "2022-04-20T04:24:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1671153853/t1d2eivhpnlup7ainjz9.png" alt="onurtaskiran" />
+
+Websites made without cache can cause speed problems. An event called cache is the caching process. This is very suitable for speeding up your php pages. We can make our php pages that need to be faster with easy and efficient codes
+
+I only serve two php pages. The first is t-cache.php and the other is b-cache.php you can give different names.
+
+```javascript
+url = $_SERVER["SCRIPT_NAME"];
+$break = Explode('/', $url);
+$file = $break[count($break) - 1];
+$cachefile = 'cached-'.substr_replace($file ,"",-4).'.html';
+$cachetime = 18000;
+
+
+if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+    echo "<!-- Cached copy, generated ".date('H:i', filemtime($cachefile))." -->\n";
+    include($cachefile);
+    exit;
+}
+ob_start(); // Start the output buffer
+```
+
+Paste the code above into our t-cache.php page.
+
+As you can see, our code is simple, the first five lines create the html file in the name of our php file. For example, if I am using tonur.php file, it creates an html page named cached-tonur.html.
+
+Do we have files in our later codes? Is not there? It does not run any php code if any. if not, it creates our cache file.
+
+Let's add the codes to our b-cache.php page.
+
+```javascript
+// import content to a file
+$cached = fopen($cachefile, 'w');
+fwrite($cached, ob_get_contents());
+fclose($cached);
+ob_end_flush(); //send to browser
+```
+
+If our file is not found here, this code is executed. All of the php page is sent to the browser instead of working.
+
+Yes now we are calling to our main php file with include as below.
+
+```javascript
+include('top-cache.php'); 
+
+// Your website codes
+
+include('bottom-cache.php');
+```
+
+Your site is now faster.

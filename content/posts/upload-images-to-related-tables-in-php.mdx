@@ -1,0 +1,176 @@
+---
+title: Upload Images to Related Tables in php
+description: Set file paths to yourself. I named my page with html codes meta.php, I named my page with php codes as metas.
+date: "2022-03-16T07:24:00"
+---
+
+<img className="w-full rounded-xl" src="https://res.cloudinary.com/djfqidbj1/image/upload/v1670900142/qjbxk9tqncjwhihkvgvk.png" alt="onurtaskiran" />
+
+Set file paths to yourself. I named my page with html codes meta.php, I named my page with php codes as metas.php Database connection is made with connection.php in the include folder meta.php is located inside the admin folder. Pictures are taken to the upload folder. Upload folder is outside the admin folder When I say $new_name="../upload/" I say go out from the admin folder, go to the upload folder, upload the image...
+
+
+Tables
+ ```javascript
+
+meta
+
+-id
+
+-model_name
+
+-model_code
+
+-stock_status
+
+-new_product
+
+-showcase
+
+-status
+```
+ 
+
+product_images
+```javascript
+-id
+
+-meta_id
+
+-image_url
+
+-row
+
+-status
+```
+
+I save the id of the meta table to the meta_id of the product_images table
+
+Html File
+
+```javascript
+<div class="content">
+  <form
+    action="../include/ametas.php"
+    enctype="multipart/form-data"
+    method="post"
+  >
+    <div class="row">
+      <label>Product Name</label>
+
+      <div class="right"><input type="text" name="model_name" value="" /></div>
+    </div>
+
+    <div class="row">
+      <label>Stock Code</label>
+
+      <div class="right"><input type="text" name="model_code" value="" /></div>
+    </div>
+
+    <div class="row">
+      <label>New Product</label>
+      <div class="right">
+        <input
+          type="checkbox"
+          name="new_product"
+          value="1"
+          id="third-check"
+          class="require-one"
+        />
+        <label for="third-check">Mark as New Product</label>
+      </div>
+    </div>
+    <div class="row">
+      <label>HomePage</label>
+      <div class="right">
+        <input
+          type="radio"
+          name="showcase"
+          value="1"
+          id="radio-1"
+          checked="checked"
+        />
+        <label for="radio-1">Show on homepage</label>
+
+        <input type="radio" name="showcase" value="0" id="radio-2" />
+        <label for="radio-2">Don't show on homepage</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Active Status</label>
+      <div class="right">
+        <input
+          type="radio"
+          name="status"
+          value="1"
+          id="radio-3"
+          checked="checked"
+        />
+        <label for="radio-3">Product Active</label>
+
+        <input type="radio" name="status" value="0" id="radio-4" />
+        <label for="radio-4">Product Passive</label>
+      </div>
+    </div>
+    <div class="row">
+      <link rel="stylesheet" href="f.css" />
+      <label>Resim</label>
+      <div class="right">
+        <input type="file" id="files" name="image_url" multiple />
+        <button type="submit" class="green"><span>Select</span></button>
+      </div>
+      <div class="">
+        <output id="list"></output>
+      </div>
+      <script type="text/javascript" src="../js/fa.js"></script>
+    </div>
+
+    <button type="submit" class="green"><span>Save</span></button>
+  </form>
+</div>
+```
+php page
+```javascript
+<?php
+include("connection.php");
+
+if($_POST){
+
+    if ($_FILES["image_url"]["size"]<1024*1024){
+        if ($_FILES["image_url"]["type"]=="image/jpeg"){
+
+            $model_name = $_POST["model_name"];
+            $model_code = $_POST["model_code"];
+            $new_product = $_POST["new_product"];
+            $showcase = $_POST["showcase"];
+            $status = $_POST["status"];
+
+            $file_name=$_FILES["image_url"]["name"];
+            $produce=array("as","rt","ty","yu","fg");
+            $extension=substr($file_name,-4,4);
+            $keep_number=rand(1,10000);
+            $new_name="../upload/".$produce[rand(0,4)].$keep_number.$extension;
+
+            if (move_uploaded_file($_FILES["image_url"]["tmp_name"],$new_name)){
+                echo '<!--<script type="text/javascript">alert("Successfully uploaded"), window.location="../admin/meta.php";</script>-->';
+                $metas=mysql_query("insert into meta SET model_name='$model_name',model_code = '$model_code',new_product='$new_product',showcase='$showcase',status='$status'");
+                $gid = mysql_insert_id();
+                $sorgu=mysql_query("insert into product_images SET meta_id='$gid',image_url='$new_name'");
+                if ($metas && $sorgu){
+                    echo '<!--<script type="text/javascript">alert("Registration Successful"), window.location="../admin/meta.php";</script>-->';
+                }else{
+                    echo '<!--<script type="text/javascript">alert("There was a problem during registration"), window.location="../admin/meta.php";</script>-->';
+                }
+            }else{
+                echo '<!--<script type="text/javascript">alert("File failed to upload"), window.location="../admin/meta.php";</script>-->';
+            }
+        }else{
+            echo '<!--<script type="text/javascript">alert("The file can only be in jpeg format"), window.location="../admin/meta.php";</script>-->';
+        }
+    }else{
+        echo '<!--<script type="text/javascript">alert("File cannot exceed 1mb"), window.location="../admin/meta.php";</script>-->';
+    }
+}
+?>
+```
+Thanks.
