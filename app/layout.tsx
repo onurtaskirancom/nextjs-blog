@@ -65,11 +65,11 @@ const bioCard = () => {
           <img
             src="/images/onurtaskiran.jpg"
             alt=""
-            className="flex-none w-24 h-24 rounded-full object-cover"
+            className="flex-none w-40 h-40 rounded-full object-cover"
             loading="lazy"
             decoding="async"
           />
-          <div className="flex-auto">
+          <div className="flex-auto text-[16px]">
             <div className="text-base text-slate-900 font-semibold dark:text-slate-300">
               <Link href="/about">
                 {/* <span className="absolute inset-0 dark:text-tahiti-name"></span> */}
@@ -146,12 +146,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ${inter.className}`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="max-w-2xl mx-auto py-1 px-4 ">
+          <div className="max-w-4xl mx-auto py-1 px-4 ">
             <header>
               <div>{socialMedia()}</div>
               <div>
                 <Link href="/">
-                  <h1 className="text-[28px] p-8 py-3 font-extrabold dark:text-tahiti-heed">
+                  <h1 className="text-[38px] p-5 py-3 font-extrabold dark:text-tahiti-heed">
                     Onur Taskiran Blog Web Site
                   </h1>
                 </Link>
@@ -159,10 +159,25 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
               <div className="flex items-center justify-between">
                 <ModeToggle />
-                <nav className="ml-auto text-sm font-medium space-x-6 dark:text-tahiti-menu">
-                  <Link href="/">Home</Link>
-                  <Link href="/about">About</Link>
-                  <Link href="/contact">Contact</Link>
+                <nav className="ml-auto text-sm font-medium space-x-3 dark:text-tahiti-menu text-[16.3px] font-black ">
+                  <Link
+                    className="dark:hover:text-tahiti-title dark:hover:underline "
+                    href="/"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    className="dark:hover:text-tahiti-title dark:hover:underline"
+                    href="/about"
+                  >
+                    About
+                  </Link>
+                  <Link
+                    className="dark:hover:text-tahiti-title dark:hover:underline"
+                    href="/contact"
+                  >
+                    Contact
+                  </Link>
                 </nav>
               </div>
             </header>

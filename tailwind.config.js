@@ -20,6 +20,7 @@ module.exports = {
         name: '#96d0ff',
         menu: '#ce78b0',
         footer: '#ce78b0',
+        butto: '#585858',
       },
       // ...
     },
