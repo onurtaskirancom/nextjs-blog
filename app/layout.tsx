@@ -69,7 +69,7 @@ const bioCard = () => {
             loading="lazy"
             decoding="async"
           />
-          <div className="flex-auto text-[16px]">
+          <div className="flex-auto text-[16px] ">
             <div className="text-base text-slate-900 font-semibold dark:text-slate-300">
               <Link href="/about">
                 {/* <span className="absolute inset-0 dark:text-tahiti-name"></span> */}
