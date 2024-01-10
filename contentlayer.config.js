@@ -43,6 +43,12 @@ export const Post = defineDocumentType(() => ({
     bannerImage: {
       type: 'string',
     },
+    tags: {
+      type: 'list',
+      of: { type: 'string' },
+      description: 'List of filterable tags for content',
+      required: false,
+    },
     date: {
       type: 'date',
       required: true,

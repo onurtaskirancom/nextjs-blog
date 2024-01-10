@@ -59,13 +59,13 @@ interface RootLayoutProps {
 
 const bioCard = () => {
   return (
-    <div className="text-sm leading-6   ">
+    <div className="text-sm leading-6 ">
       <figure className="relative flex flex-col-reverse bg-slate-100 rounded-lg p-6 dark:bg-slate-800 dark:highlight-white/5">
         <figcaption className="flex items-center space-x-4">
           <img
             src="/images/onurtaskiran.jpg"
             alt="onurtaskiran"
-            className="flex-none w-28 h-28 rounded-full object-cover md:max-w-2xl"
+            className="flex-none w-28 h-28 rounded-full object-cover md:max-w-2xl "
             loading="lazy"
             decoding="async"
           />
