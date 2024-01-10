@@ -64,8 +64,8 @@ const bioCard = () => {
         <figcaption className="flex items-center space-x-4">
           <img
             src="/images/onurtaskiran.jpg"
-            alt=""
-            className="flex-none w-40 h-40 rounded-full object-cover"
+            alt="onurtaskiran"
+            className="flex-none w-28 h-28 rounded-full object-cover"
             loading="lazy"
             decoding="async"
           />

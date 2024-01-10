@@ -16,8 +16,9 @@ export default function Home() {
                   <div className=" rounded-xl group sm:flex space-x-6 bg-white bg-opacity-50 shadow-sm hover:rounded-2xl ">
                     <Link href={post.slug}>
                       <img
-                        className="h-48 w-max object-fill  object-cover object-top rounded-lg transition duration-500 group-hover:rounded-xl  "
+                        className="h-11/12 w-11/12 object-fill  object-cover object-top rounded-lg transition duration-500 group-hover:rounded-xl  "
                         src={post.bannerImage || 'images/default.jpeg'}
+                        alt="onurtaskiran"
                       />
                     </Link>
                     <div className="sm:w-7/12   ">
@@ -38,14 +39,13 @@ export default function Home() {
                             </p>
                           )}
                         </div>
-       
-                          <Link
-                            className="block w-max text-cyan-600 dark:text-tahiti-title"
-                            href={post.slug}
-                          >
-                            Read more
-                          </Link>
-                       
+
+                        <Link
+                          className="block w-max text-cyan-600 dark:text-tahiti-title"
+                          href={post.slug}
+                        >
+                          Read more
+                        </Link>
                       </div>
                     </div>
                   </div>
