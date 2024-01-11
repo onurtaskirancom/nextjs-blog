@@ -9,8 +9,23 @@ export default function Home() {
       {allPosts
         .sort((a, b) => (a.date < b.date ? 1 : -1))
         .map((post) => (
-          <article key={post._id}>
-            <div className=" bg-gradient-to-br from-green-50 to-cyan-100">
+          <article className="" key={post._id}>
+            <div className="dark:border-tahiti-dark rounded-lg">
+              <Link href={post.slug}>
+                <h2 className="dark:text-tahiti-dark h-3 table mb-1">
+                  {post.title}
+                </h2>
+              </Link>
+              <MdDateRange className="float-left  mt-0.5 dark:text-tahiti-title" />
+              <p className="text-[13px] m-0 dark:text-tahiti-title">
+                {dayjs(post.date).format('MMMM D, YYYY - HH:mm')}
+              </p>
+              {post.description && (
+                <p className="not-prose mt-3">{post.description}</p>
+              )}
+            </div>
+
+            {/* <div className=" bg-gradient-to-br from-green-50 to-cyan-100">
               <div className="container m-auto ">
                 <div className="">
                   <div className="min-w-full rounded-xl group sm:flex space-x-6 bg-white bg-opacity-50 shadow-sm hover:rounded-2xl ">
@@ -43,17 +58,13 @@ export default function Home() {
                           href={post.slug}
                         >
                           Read more
-                        </Link>
-                        
-                        
-                       
-                  
+                        </Link> 
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* <div className="max-w-xl ">
               <Link href={post.slug}>
                 <h2 className="dark:text-tahiti-dark h-3 table mb-1">

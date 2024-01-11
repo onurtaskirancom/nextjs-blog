@@ -61,11 +61,11 @@ const bioCard = () => {
   return (
     <div className="text-sm leading-6 ">
       <figure className="relative flex flex-col-reverse bg-slate-100 rounded-lg p-6 dark:bg-slate-800 dark:highlight-white/5">
-        <figcaption className="flex items-center space-x-4">
+        <figcaption className="block sm:block md:flex lg:flex xl:flex 2xl:flex items-center space-x-4 ">
           <img
             src="/images/onurtaskiran.jpg"
             alt="onurtaskiran"
-            className="flex-none w-28 h-28 rounded-full object-cover md:max-w-2xl "
+            className="mx-auto flex-none w-28 h-28 rounded-full object-cover md:max-w-2xl "
             loading="lazy"
             decoding="async"
           />
@@ -73,10 +73,14 @@ const bioCard = () => {
             <div className="text-base text-slate-900 font-semibold dark:text-slate-300">
               <Link href="/about">
                 {/* <span className="absolute inset-0 dark:text-tahiti-name"></span> */}
-                <p className="dark:text-tahiti-name">Onur Taşkıran</p>
+                <p className="mx-auto table md:flex lg:flex xl:flex 2xl:flex sm:table dark:text-tahiti-name">
+                  Onur Taşkıran
+                </p>
               </Link>
             </div>
-            <div className="mt-0.5 dark:text-tahiti-title">Web Developer</div>
+            <div className="mx-auto table md:flex lg:flex xl:flex 2xl:flex  sm:table mt-0.5 dark:text-tahiti-title">
+              Web Developer
+            </div>
 
             <blockquote className="mt-2 text-slate-700 dark:text-slate-300">
               <p className="dark:text-tahiti-bio">
@@ -146,12 +150,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ${inter.className}`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="max-w-4xl mx-auto py-1 px-4 ">
+          <div className="max-w-3xl mx-auto py-1 px-4 ">
             <header>
               <div>{socialMedia()}</div>
               <div>
                 <Link href="/">
-                  <h1 className="text-[38px] p-5 py-3 font-extrabold dark:text-tahiti-heed">
+                  <h1 className="text-[40px] p-5 py-3 font-extrabold dark:text-tahiti-heed">
                     Onur Taskiran Blog Web Site
                   </h1>
                 </Link>

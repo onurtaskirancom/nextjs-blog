@@ -60,8 +60,8 @@ export default async function PostPage({ params }: PostProps) {
           {post.description}
         </p>
       )} */}
-      <MdDateRange className="float-left mt-2.5" />
-      <p className="text-[13px] ">
+      <MdDateRange className="float-left mt-2.5 dark:text-tahiti-title" />
+      <p className="text-[13px] dark:text-tahiti-title">
         {dayjs(post.date).format('MMMM D, YYYY - HH:mm')}
       </p>
       <hr className="my-4 " />
