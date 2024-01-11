@@ -73,7 +73,7 @@ const bioCard = () => {
             <div className="text-base text-slate-900 font-semibold dark:text-slate-300">
               <Link href="/about">
                 {/* <span className="absolute inset-0 dark:text-tahiti-name"></span> */}
-                <p className="mx-auto table md:flex lg:flex xl:flex 2xl:flex sm:table dark:text-tahiti-name">
+                <p className="text-[22px] py-1.5 mx-auto table md:flex lg:flex xl:flex 2xl:flex sm:table dark:text-tahiti-name">
                   Onur Taşkıran
                 </p>
               </Link>
